@@ -22,7 +22,7 @@ def minimax(no, jogada):
     if(len(no.playerInimigo) == 0):
         
         return 
-    if(no.altura == 3):
+    if(no.altura == 4):
         return 
     
     if(jogada):
@@ -40,12 +40,14 @@ def minimax(no, jogada):
                     
                     filho.altura = no.altura + 1
                     filho.playerInimigo[0].vida -= 1
-                    a = minimax(filho, True)
-                    no.filho.append(a)
+                    no.filho.append(no)
+
+                    minimax(filho,True)
                                         
                     y += 1
             x += 1
             
+         
     
     
     
