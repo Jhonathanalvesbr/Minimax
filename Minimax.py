@@ -36,17 +36,20 @@ def minimax(player, playerInimigo, jogada):
                 if(i.vida <= 0):
                     playerInimigo.remove(i)
                 i.vida -= p.ataque
-            return minimax(player, playerInimigo, True)
+                return minimax(player, playerInimigo, True)
+                i.vida += p.ataque
     else:
          for i in playerInimigo:
             for p in player:
                 if(p.vida <= 0):
                     player.remove(p)
                 p.vida -= i.ataque
-            return minimax(player, playerInimigo, False)
+                return minimax(player, playerInimigo, False)
+                p.vida += i.ataque
+
     jogada = not jogada
 
 
 
-print(minimax(player, playerInimigo, False))
+print(minimax(player, playerInimigo, True))
 
