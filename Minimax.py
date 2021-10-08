@@ -29,7 +29,7 @@ def minimax(player, playerInimigo, jogada):
     
     player = copy(player)
     playerInimigo = copy(playerInimigo)
-
+    
     if(jogada):
         for p in player:
             for i in playerInimigo:
@@ -48,7 +48,7 @@ def minimax(player, playerInimigo, jogada):
                 p.vida += i.ataque
 
     jogada = not jogada
-
+    print(t)
 
 
 print(minimax(player, playerInimigo, True))
