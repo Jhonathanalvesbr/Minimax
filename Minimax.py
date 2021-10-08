@@ -1,4 +1,4 @@
-package minimax;
+package Minimax;
 
 import java.util.ArrayList;
 
