@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 
 public class Minimax {
-
+    
+    
     public static class No{
         ArrayList<No> filho = new ArrayList<>();
         No pai = null;
@@ -15,6 +16,9 @@ public class Minimax {
         int ataque = 1;
         int level = 1;
     }
+    
+    
+    int tamanho = 0;
     
     public static void main(String[] args) {
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
@@ -31,13 +35,19 @@ public class Minimax {
         no.player = player;
         no.playerInimigo = playerInimigo;
         
-        minimax(no);
+        Minimax a = new Minimax();
         
-        System.out.println("Tamanho: " + no.filho.get(0).filho.get(0).filho.get(0).filho.get(0).playerInimigo.size());
+        
+        minimax(no,a);
+        
+        
+        System.out.println("Gerados: " +  a.tamanho);
+        System.out.println("Tamanho: " +  no.filho.size());
        
         
     }
-    public static void minimax(No no){
+    
+    public static void minimax(No no, Minimax a){
         if(no.player.size() == 0){
             return;
         }
@@ -77,9 +87,9 @@ public class Minimax {
                     
                     novoFilho.altura = (no.altura+1)*1;
                     novoFilho.playerInimigo.get(j).vida -= 1;
+                    a.tamanho += 1;
                     
-                    
-                    minimax(novoFilho);
+                    minimax(novoFilho,a);
                     
                     j++;
                 }
