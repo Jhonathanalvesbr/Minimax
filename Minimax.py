@@ -60,4 +60,4 @@ def minimax(no):
         i += 1
 
 minimax(no)
-print(len(no.filho))
+print("Gerados: " + str(len(no.filho)))
