@@ -7,8 +7,10 @@ no = []
 
 for i in range(3):
     aux = Personagem()
+    aux.id = i
     playerInimigo.append(aux)
     aux = Personagem()
+    aux.id = i
     player.append(aux)
 
 def copy(player):
