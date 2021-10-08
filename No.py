@@ -3,7 +3,7 @@ from Personagem import Personagem
 
 
 class No:
-    pai = None
+    pai = []
     altura = None
     alpah = 1
     beta = -1
@@ -16,3 +16,7 @@ class No:
         self.id = []
         self.id.append(idPlayer)
         self.id.append(idPlayerInimigo)
+
+    def __init__(self):
+        self.player = []
+        self.playerInimigo = []
