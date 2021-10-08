@@ -17,13 +17,14 @@ for i in range(3):
 
 def minimax(no, jogada):
     if(len(no.player) == 0):
-        #no.heuristica = no.parente.altura + 1
-        return no
+        
+        return 
     if(len(no.playerInimigo) == 0):
-        #no.heuristica = no.parente.altura + 1
-        return no
+        
+        return 
     if(no.altura == 3):
-        return no
+        return 
+    
     if(jogada):
         x = 0
         for p in no.player:
@@ -36,13 +37,13 @@ def minimax(no, jogada):
                     filho = No(copy.deepcopy(no.player), copy.deepcopy(no.playerInimigo), x, y)
                     no.filho.append(filho)
                     filho.pai = no
-
+                    
                     filho.altura = no.altura + 1
                     filho.playerInimigo[y].vida -= 1
-                    minimax(filho, True)
+                    
                     y += 1
-
             x += 1
+            
     
     
     
