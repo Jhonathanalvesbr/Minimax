@@ -13,40 +13,53 @@ for i in range(3):
     aux.id = i
     player.append(aux)
 
+def copy(player):
+    if(len(player) == 0):
+        return None
+
+    auxPlayer = []
+    for p in player:
+        aux = Personagem()
+        aux.vida = p.vida
+        auxPlayer.append(aux)
+    
+    return auxPlayer
 
 def minimax(no, jogada):
     if(len(no.player) == 0):
-        no.heuristica = no.parente.altura + 1
-        return 
+        #no.heuristica = no.parente.altura + 1
+        return no
     if(len(no.playerInimigo) == 0):
-        no.heuristica = no.parente.altura + 1
-        return 
+        #no.heuristica = no.parente.altura + 1
+        return no
+
+
     
     if(jogada):
         x = 0
         for p in no.player:
             y = 0
             for i in no.playerInimigo:
-                filho = No(player, playerInimigo, x, y)
-                filho.altura = no.altura + 1
-                filho.parente = no
-    else:
-         x = 0
-         for i in no.playerInimigo:
-            y = 0
-            for p in no.player:
-                filho = No(player, playerInimigo, x, y)
-                filho.altura = no.altura + 1
-                filho.parente = no
-                y += 1
+                if(i.vida == 0):
+                    no.playerInimigo.remove(i)
+                    y -= 1
+                else:
+                    auxPlayer = copy(player)
+                    auxPlayerInimigo = copy(playerInimigo)
+                    auxPlayerInimigo[y].vida -= 1
+                    filho = No(auxPlayer, auxPlayerInimigo, x, y)
+                    filho.altura = no.altura + 1
+                    filho.pai = no
+                    no.filho.append(filho)
+                    print(auxPlayerInimigo[y].vida)
+                    minimax(filho, True)
+                    y += 1
             x += 1
 
-    jogada = not jogada
 
+    
 
-no = No()
+no = No(player, playerInimigo, None, None)
 no.altura = 0
-no.player = player
-no.playerInimigo = playerInimigo
 
 print(minimax(no, True))
