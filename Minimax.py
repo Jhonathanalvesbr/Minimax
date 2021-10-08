@@ -36,11 +36,11 @@ def minimax(no, jogada):
                 else:
                     filho = No(copy.deepcopy(no.player), copy.deepcopy(no.playerInimigo), x, y)
                     filho.pai = no
-                    
+                    no.filho.append(no)
                     
                     filho.altura = no.altura + 1
                     filho.playerInimigo[0].vida -= 1
-                    no.filho.append(no)
+                    
 
                     minimax(filho,True)
                                         
