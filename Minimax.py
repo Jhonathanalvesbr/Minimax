@@ -23,17 +23,23 @@ def minimax(no, jogada):
         return 
     
     if(jogada):
+        x = 0
         for p in no.player:
+            y = 0
             for i in no.playerInimigo:
-                aux = No()
-                aux.altura = no.altura + 1
-                aux.parente = no
+                filho = No(player, playerInimigo, x, y)
+                filho.altura = no.altura + 1
+                filho.parente = no
     else:
+         x = 0
          for i in no.playerInimigo:
+            y = 0
             for p in no.player:
-                aux = No()
-                aux.altura = no.altura + 1
-                aux.parente = no
+                filho = No(player, playerInimigo, x, y)
+                filho.altura = no.altura + 1
+                filho.parente = no
+                y += 1
+            x += 1
 
     jogada = not jogada
 

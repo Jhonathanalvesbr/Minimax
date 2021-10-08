@@ -18,9 +18,9 @@ class No:
     beta = -inf
     heuristica = None
 
-    def __init__(self, player, playerInimigo):
+    def __init__(self, player, playerInimigo, idPlayer, idPlayerInimigo):
         self.player = copy(player)
         self.playerInimigo = copy(playerInimigo)
         self.id = []
-        self.id.append(player.id)
-        self.id.append(playerInimigo.id)
+        self.id.append(idPlayer)
+        self.id.append(idPlayerInimigo)
