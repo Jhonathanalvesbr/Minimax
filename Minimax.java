@@ -41,7 +41,7 @@ public class Minimax {
         minimax(no,a);
         
         
-        System.out.println("Gerados: " +  a.tamanho);
+        //System.out.println("Gerados: " +  a.tamanho);
         System.out.println("Tamanho: " +  no.filho.size());
        
         

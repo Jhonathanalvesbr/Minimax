@@ -33,8 +33,8 @@ def minimax(no):
                 j -= 1
             else:
                 novoFilho = No.No()
-                novoFilho.pai.insert(0,no)
-                no.filho.insert(0,novoFilho)
+                novoFilho.pai.append(no)
+                no.filho.append(novoFilho)
                 
                 for k in no.player:
                     aux = Personagem.Personagem()
@@ -60,4 +60,4 @@ def minimax(no):
         i += 1
 
 minimax(no)
-print(len(no.filho))
+print("Gerados: " + str(len(no.filho)))
