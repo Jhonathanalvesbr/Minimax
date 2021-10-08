@@ -1,5 +1,3 @@
-package minimax;
-
 import java.util.ArrayList;
 
 
