@@ -63,7 +63,6 @@ public class Minimax {
         }
         for (int i = 0; i < no.player.size(); i++) {
             for (int j = 0; j < no.playerInimigo.size(); j++) {
-                if(no.playerInimigo.get(j).vida != 0){
                     No novoFilho = new No();
                     novoFilho.pai = no;
                     no.filho.add(novoFilho);
@@ -81,7 +80,6 @@ public class Minimax {
                     novoFilho.playerInimigo.get(j).vida -= 1;
                     a.tamanho += 1;
                     minimax(novoFilho,a);
-                }
             }
         }
     }

@@ -18,7 +18,10 @@ no.altura = 0
 no.player = player
 no.playerInimigo = playerInimigo
 
+k = 0
+
 def minimax(no):
+    global k
     if(len(no.player) == 0):
         return
     if(len(no.playerInimigo) == 0):
@@ -26,26 +29,41 @@ def minimax(no):
     if(no.altura == 4):
         return
     
-    for p in no.player:
-        for i in no.playerInimigo:
-
-            novoFilho = No.No()
-            novoFilho.pai = no
-            e = False
-            for k in no.filho:
-                if(k == p):
-                    e = True
-                    break
-            if(e == False):
+    p = 0
+    while p < len(no.player):
+        i = 0
+        while i < len(no.playerInimigo):
+            if(no.playerInimigo[i].vida != 0):
+                novoFilho = No.No()
+                novoFilho.pai = no
                 no.filho.append(novoFilho)
+                
+                for x in no.player:
+                    aux = Personagem.Personagem()
+                    aux.ataque = x.ataque
+                    aux.vida = x.vida
+                    aux.level = x.level
+                    aux.id = x.id
+                    novoFilho.player.append(aux)
 
-            if(i.vida != 0):
-                i.vida -= 1
-                novoFilho.playerInimigo.append(copy.deepcopy(i))
-                novoFilho.player.append(copy.deepcopy(p))
+                for x in no.playerInimigo:
+                    aux = Personagem.Personagem()
+                    aux.ataque = x.ataque
+                    aux.vida = x.vida
+                    aux.level = x.level
+                    aux.id = x.id
+                    novoFilho.playerInimigo.append(aux)
+                
+                #print(k)
+                k += 1
+
+                    
                 novoFilho.altura = no.altura + 1
-                i.vida += 1
+
+                    
                 minimax(novoFilho)
+            i += 1
+        p += 1
 
 minimax(no)
 print("Gerados: " + str(len(no.filho)))
