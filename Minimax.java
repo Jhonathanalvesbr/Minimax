@@ -7,14 +7,15 @@ public class Minimax {
     public static class No{
         ArrayList<No> filho = new ArrayList<>();
         No pai = null;
-        int altura;
-        ArrayList<Personagem> playerInimigo = new ArrayList();
-        ArrayList<Personagem> player = new ArrayList();
+        int altura = 0;
+        ArrayList<Personagem> playerInimigo = new ArrayList<>();
+        ArrayList<Personagem> player = new ArrayList<>();
     }
     public static class Personagem implements Cloneable {
         int vida = 3;
         int ataque = 1;
         int level = 1;
+        
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
             return (Personagem) super.clone();
