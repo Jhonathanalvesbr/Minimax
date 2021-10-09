@@ -7,8 +7,10 @@ player = []
 
 for i in range(3):
     aux = Personagem.Personagem()
+    aux.id = i
     player.append(aux)
     aux = Personagem.Personagem()
+    aux.id = i
     playerInimigo.append(aux)
 
 no = No.No()
@@ -24,40 +26,26 @@ def minimax(no):
     if(no.altura == 4):
         return
     
-    i = 0
-    while(i < len(no.player)):
-        j = 0
-        while(j < len(no.playerInimigo)):
-            if(no.playerInimigo[j].vida == 0):
-                no.playerInimigo.pop(j)
-                j -= 1
-            else:
-                novoFilho = No.No()
-                novoFilho.pai.insert(0,no)
-                no.filho.insert(0,novoFilho)
-                
-                for k in no.player:
-                    aux = Personagem.Personagem()
-                    aux.ataque = k.ataque * 1
-                    aux.level = k.level * 1
-                    aux.vida = k.vida * 1
-                    novoFilho.player.append(aux)
+    for p in no.player:
+        for i in no.playerInimigo:
 
-                for k in no.playerInimigo:
-                    aux = Personagem.Personagem()
-                    aux.ataque = k.ataque * 1
-                    aux.level = k.level * 1
-                    aux.vida = k.vida * 1
-                    novoFilho.playerInimigo.append(aux)
+            novoFilho = No.No()
+            novoFilho.pai = no
+            e = False
+            for k in no.filho:
+                if(k == p):
+                    e = True
+                    break
+            if(e == False):
+                no.filho.append(novoFilho)
 
-                novoFilho.altura = (no.altura + 1) * 1
-                novoFilho.playerInimigo[j].vida -= no.player[i].ataque
-
+            if(i.vida != 0):
+                i.vida -= 1
+                novoFilho.playerInimigo.append(copy.deepcopy(i))
+                novoFilho.player.append(copy.deepcopy(p))
+                novoFilho.altura = no.altura + 1
+                i.vida += 1
                 minimax(novoFilho)
-
-            j += 1
-
-        i += 1
 
 minimax(no)
 print("Gerados: " + str(len(no.filho)))
