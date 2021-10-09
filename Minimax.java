@@ -8,19 +8,23 @@ public class Minimax {
         ArrayList<No> filho = new ArrayList<>();
         No pai = null;
         int altura;
-        ArrayList<Personagem> playerInimigo;
-        ArrayList<Personagem> player;
+        ArrayList<Personagem> playerInimigo = new ArrayList();
+        ArrayList<Personagem> player = new ArrayList();
     }
-    public static class Personagem{
+    public static class Personagem implements Cloneable {
         int vida = 3;
         int ataque = 1;
         int level = 1;
+        @Override
+        protected Personagem clone() throws CloneNotSupportedException {
+            return (Personagem) super.clone();
+        }
     }
     
     
     int tamanho = 0;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
         ArrayList<Personagem> player = new ArrayList<>();
         
@@ -41,13 +45,13 @@ public class Minimax {
         minimax(no,a);
         
         
-        //System.out.println("Gerados: " +  a.tamanho);
+        System.out.println("Gerados: " +  a.tamanho);
         System.out.println("Tamanho: " +  no.filho.size());
        
         
     }
     
-    public static void minimax(No no, Minimax a){
+    public static void minimax(No no, Minimax a) throws CloneNotSupportedException{
         if(no.player.size() == 0){
             return;
         }
@@ -59,39 +63,24 @@ public class Minimax {
         }
         for (int i = 0; i < no.player.size(); i++) {
             for (int j = 0; j < no.playerInimigo.size(); j++) {
-                if(no.playerInimigo.get(j).vida == 0){
-                    no.playerInimigo.remove(j);
-                    j--;
-                }
-                else{
+                if(no.playerInimigo.get(j).vida != 0){
                     No novoFilho = new No();
                     novoFilho.pai = no;
                     no.filho.add(novoFilho);
-                    ArrayList<Personagem> auxPlayerInimigo = new ArrayList<>();
                     for (int k = 0; k < no.player.size(); k++) {
                         Personagem aux = new Personagem();
-                        aux.level = 1;
-                        aux.ataque = no.player.get(k).ataque * 1;
-                        aux.vida = no.player.get(k).vida * 1 ;
-                        auxPlayerInimigo.add(aux);
+                        aux = no.player.get(k).clone();
+                        novoFilho.player.add(aux);
                     }
-                    novoFilho.player = auxPlayerInimigo;
-                    auxPlayerInimigo = new ArrayList<>();
                     for (int k = 0; k < no.playerInimigo.size(); k++) {
                         Personagem aux = new Personagem();
-                        aux.ataque = no.playerInimigo.get(k).ataque * 1;
-                        aux.vida = no.playerInimigo.get(k).vida * 1 ;
-                        auxPlayerInimigo.add(aux);
+                        aux = no.playerInimigo.get(k).clone();
+                        novoFilho.playerInimigo.add(aux);
                     }
-                    novoFilho.playerInimigo = auxPlayerInimigo;
-                    
-                    novoFilho.altura = (no.altura+1)*1;
+                    novoFilho.altura = no.altura + 1 ;
                     novoFilho.playerInimigo.get(j).vida -= 1;
                     a.tamanho += 1;
-                    
                     minimax(novoFilho,a);
-                    
-                    j++;
                 }
             }
         }
