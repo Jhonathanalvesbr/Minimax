@@ -1,6 +1,12 @@
 
 import java.util.ArrayList;
-import static java.lang.Math.*;
+import javax.swing.JPanel;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
 
 public class Minimax {
 
@@ -16,7 +22,7 @@ public class Minimax {
 
     public static class Personagem implements Cloneable {
 
-        int vida = 1;
+        int vida = 2;
         int ataque = 1;
         int level = 1;
         int id = 0;
@@ -25,6 +31,44 @@ public class Minimax {
         protected Personagem clone() throws CloneNotSupportedException {
             return (Personagem) super.clone();
         }
+    }
+
+    public static class TelaGame extends JPanel implements MouseListener {
+
+        @Override
+        public void paintComponent(Graphics g2) {
+
+            Graphics2D g = (Graphics2D) g2.create();
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, 600, 600);
+            g.setStroke(new BasicStroke(3));
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            System.out.println(e.getX());
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            System.out.println(e.getX());
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            System.out.println(e.getX());
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            System.out.println(e.getX());
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            System.out.println(e.getX());
+        }
+
     }
 
     static int tamanho = 0;
@@ -47,6 +91,16 @@ public class Minimax {
             player.add(aux);
         }
 
+        JFrame frame = new JFrame("RPG");
+        frame.setSize(600, 600);
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        TelaGame game = new TelaGame();
+        frame.add(game);
+        frame.addMouseListener(game);
+
         No no = new No();
         no.player = player;
         no.playerInimigo = playerInimigo;
@@ -55,7 +109,7 @@ public class Minimax {
         player.get(1).ataque = 1;
         player.get(0).vida = 5;
         playerInimigo.get(1).vida = 4;
-        playerInimigo.get(0).ataque = 4;
+        playerInimigo.get(1).ataque = 4;
 
         //player.get(1).ataque = 1;
         System.out.println("Valor: " + minimax(no, true, MIN, MAX));
@@ -65,6 +119,7 @@ public class Minimax {
         for (int i = 0; i < no.filho.size(); i++) {
             System.out.println(i + " | " + no.filho.get(i).valor);
         }
+
     }
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
