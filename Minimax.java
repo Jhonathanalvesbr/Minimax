@@ -11,7 +11,7 @@ public class Minimax {
         int altura = 0;
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
         ArrayList<Personagem> player = new ArrayList<>();
-        int v = 0;
+        int valor = 0;
     }
 
     public static class Personagem implements Cloneable {
@@ -28,8 +28,8 @@ public class Minimax {
     }
 
     static int tamanho = 0;
-    static int MAX = 1000;
-    static int MIN = -1000;
+    static Integer MAX = Integer.MAX_VALUE;
+    static int MIN = Integer.MIN_VALUE;
 
     public static void main(String[] args) throws CloneNotSupportedException {
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
@@ -47,7 +47,6 @@ public class Minimax {
             player.add(aux);
         }
 
-
         No no = new No();
         no.player = player;
         no.playerInimigo = playerInimigo;
@@ -64,39 +63,19 @@ public class Minimax {
         System.out.println("Gerados: " + tamanho);
         System.out.println("Tamanho: " + no.filho.size());
         for (int i = 0; i < no.filho.size(); i++) {
-            System.out.println(i + " | " + no.filho.get(i).v);
+            System.out.println(i + " | " + no.filho.get(i).valor);
         }
-        /*for (int i = 0; i < no.playerInimigo.size(); i++) {
-            System.out.println(i + " <|> " + no.playerInimigo.get(i).id);
-        }*/
-
-    }
-
-    public static boolean tamanho(ArrayList<Personagem> player) {
-        int e = 0;
-        for (int k = 0; k < player.size(); k++) {
-            if (player.get(k).vida == 0) {
-                e += 1;
-            }
-        }
-        if (e == player.size()) {
-            return true;
-        }
-        return false;
     }
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
         if (no.player.size() == 0) {
-            //System.out.println("PlayerInimigo win: " + no.altura);
             return -no.altura;
         }
         if (no.playerInimigo.size() == 0) {
-            //System.out.println("Player win: " + no.altura);
             return no.altura;
         }
-
         if (jogada) {
-            int best = Integer.MIN_VALUE;
+            int best = MIN;
             for (int i = 0; i < no.player.size(); i++) {
                 for (int j = 0; j < no.playerInimigo.size(); j++) {
                     No novoFilho = new No();
@@ -118,21 +97,18 @@ public class Minimax {
                         novoFilho.playerInimigo.remove(j);
                     }
                     tamanho += 1;
-                    novoFilho.v = no.v = Integer.MIN_VALUE;
-                    //System.out.println(1);
-                    novoFilho.v = no.v = Math.max(no.v, minimax(novoFilho, false, alpha, beta));
-                    //System.out.println(no.beta);
-                    best = Math.max(no.v, best);
-                    beta = Math.min(beta, best);
+                    novoFilho.valor = no.valor = MIN;
+                    novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
+                    best = Math.max(best, novoFilho.valor);
+                    alpha = Math.max(alpha, best);
                     if (beta <= alpha) {
-                        //System.out.println(novoFilho.v);
                         break;
                     }
                 }
             }
             return best;
         } else {
-            int best = Integer.MAX_VALUE;
+            int best = MAX;
             for (int i = 0; i < no.playerInimigo.size(); i++) {
                 for (int j = 0; j < no.player.size(); j++) {
                     No novoFilho = new No();
@@ -154,22 +130,17 @@ public class Minimax {
                         novoFilho.player.remove(j);
                     }
                     tamanho += 1;
-                    novoFilho.v = no.v = Integer.MAX_VALUE;
+                    novoFilho.valor = no.valor = MAX;
                     jogada = !jogada;
-
-                    novoFilho.v = no.v = Math.min(no.v, minimax(novoFilho, true, alpha, beta));
-                    best = Math.min(no.v, best);
-                    //System.out.println(no.alpha);
+                    novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
+                    best = Math.min(best, novoFilho.valor);
                     beta = Math.min(beta, best);
-                    alpha = Math.max(alpha, best);
                     if (beta <= alpha) {
-                        //System.out.println(novoFilho.v);
                         break;
                     }
                 }
             }
             return best;
         }
-
     }
 }
