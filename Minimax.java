@@ -142,12 +142,14 @@ public class Minimax {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\Jhonathan Alves\\Documents\\Minimax\\img\\Naruto\\50_Asset_90.png")),50,50));
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\Jhonathan Alves\\Documents\\Minimax\\img\\Naruto\\60_Asset_83.png")),50,50));
+        
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\50_Asset_90.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\60_Asset_83.png")),50,50));
         player.get(0).playerImagem = naruto;
         TelaGame game = new TelaGame(player);
         game.player = player;
         frame.add(game);
+        game.setVisible(true);
         frame.addMouseListener(game);
 
         No no = new No();
