@@ -26,7 +26,7 @@ public class Minimax {
     }
 
     public static class Personagem implements Cloneable {
-        public static ArrayList<PlayerImagem> playerImagem;
+        public ArrayList<PlayerImagem> playerImagem;
         int vida = 2;
         int ataque = 1;
         int level = 1;
@@ -69,6 +69,10 @@ public class Minimax {
 
     public static class TelaGame extends JPanel implements MouseListener {
         ArrayList<Personagem> player;
+
+        public TelaGame(ArrayList<Personagem> player){
+            this.player = player;
+        }
 
         @Override
         public void paintComponent(Graphics g2) {
@@ -139,7 +143,12 @@ public class Minimax {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        TelaGame game = new TelaGame();
+        ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\Jhonathan Alves\\Documents\\Minimax\\img\\Naruto\\50_Asset_90.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\Jhonathan Alves\\Documents\\Minimax\\img\\Naruto\\60_Asset_83.png")),50,50));
+        player.get(0).playerImagem = naruto;
+        TelaGame game = new TelaGame(player);
+        game.player = player;
         frame.add(game);
         frame.addMouseListener(game);
 
@@ -147,12 +156,8 @@ public class Minimax {
         no.player = player;
         no.playerInimigo = playerInimigo;
         
-        ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Documents\\Minimax\\Minimax\\img\\Naruto\\50_Asset_90.png")),50,50));
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Documents\\Minimax\\Minimax\\img\\Naruto\\60_Asset_83.png")),50,50));
-        player.get(0).playerImagem = naruto;
-
-        game.player = (player);
+        
+        
 
         
         
@@ -164,13 +169,13 @@ public class Minimax {
         playerInimigo.get(1).ataque = 4;
 
         //player.get(1).ataque = 1;
-        System.out.println("Valor: " + minimax(no, true, MIN, MAX));
+        /*System.out.println("Valor: " + minimax(no, true, MIN, MAX));
 
         System.out.println("Gerados: " + tamanho);
         System.out.println("Tamanho: " + no.filho.size());
         for (int i = 0; i < no.filho.size(); i++) {
             System.out.println(i + " | " + no.filho.get(i).valor);
-        }
+        }*/
 
     }
 
