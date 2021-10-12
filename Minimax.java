@@ -42,14 +42,11 @@ public class Minimax {
 
         public void update(){
             if(tempo > time){
-                if(indice > playerImagem.size()){
+                indice++;
+                if(indice > playerImagem.size()-1){
                     indice = 0;
-                    System.out.println(1);
-                }
-                else{
-                    indice++;
-                }
-                indice = 0;
+                } 
+
                 tempo = 0;
             }
             tempo++;
@@ -83,7 +80,7 @@ public class Minimax {
             }
                
 
-                repaint();
+            repaint();
         }
         
         @Override
