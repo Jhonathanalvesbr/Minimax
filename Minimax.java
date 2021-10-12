@@ -27,7 +27,7 @@ public class Minimax {
     }
 
     public static class Personagem implements Cloneable {
-
+        public static ArrayList<PlayerImagem> playerImagem;
         int vida = 2;
         int ataque = 1;
         int level = 1;
@@ -51,7 +51,8 @@ public class Minimax {
     }
 
     public static class TelaGame extends JPanel implements MouseListener {
-        public static ArrayList<PlayerImagem> playerImagem = new ArrayList<PlayerImagem>();
+        ArrayList<Personagem> player;
+
         int i = 0;
         int playerImagemTamanho = 0;
         @Override
@@ -62,7 +63,7 @@ public class Minimax {
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
             
-                g.drawImage(playerImagem.get(i).imagem, playerImagem.get(i).x, playerImagem.get(i).y, null);
+                g.drawImage(player.get(0).playerImagem.get(i).imagem, player.get(0).playerImagem.get(i).x, player.get(0).playerImagem.get(i).y, null);
   
                 try {
                     Thread.sleep(250);
@@ -141,8 +142,9 @@ public class Minimax {
         ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
         naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\50_Asset_90.png")),50,50));
         naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\60_Asset_83.png")),50,50));
-        
-        game.playerImagem.add(naruto);
+        player.get(0).playerImagem = naruto;
+
+        game.player = (player);
         game.playerImagemTamanho = naruto.size()-1;
         
         
