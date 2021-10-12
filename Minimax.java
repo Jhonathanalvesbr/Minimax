@@ -11,6 +11,8 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
@@ -98,6 +100,8 @@ public class Minimax {
         
         ArrayList<Integer> selecao = new ArrayList();
         boolean click = true;
+
+        No no;
         
         public void escolhe(int i){
             if(click){
@@ -111,6 +115,11 @@ public class Minimax {
             if(selecao.size() >= 2){
                 playerInimigo.get(selecao.get(1)).vida -= player.get(selecao.get(0)).ataque;
                 selecao = new ArrayList();
+                try {
+                    System.out.println("Valor: " + minimax(no, false, Integer.MIN_VALUE, Integer.MAX_VALUE));
+                } catch (CloneNotSupportedException ex) {
+                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
 
@@ -333,7 +342,7 @@ public class Minimax {
         playerInimigo.get(0).vida = 2;
         playerInimigo.get(1).ataque = 4;
         
-        
+        game.no = no;
         
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
@@ -344,7 +353,9 @@ public class Minimax {
             p.life.setValue(p.vida);
         }
 
-        //player.get(1).ataque = 1;
+        player.get(1).ataque = 1;
+
+        
         /*System.out.println("Valor: " + minimax(no, true, MIN, MAX));
 
         System.out.println("Gerados: " + tamanho);
