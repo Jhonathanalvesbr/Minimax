@@ -6,6 +6,12 @@ import java.awt.Graphics;
 import java.awt.event.MouseListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Minimax {
@@ -31,19 +37,46 @@ public class Minimax {
         protected Personagem clone() throws CloneNotSupportedException {
             return (Personagem) super.clone();
         }
+    }  
+    
+    public static class PlayerImagem{
+        BufferedImage imagem;
+        int x;
+        int y;
+        public PlayerImagem(BufferedImage imagem, int x, int y){
+            this.imagem = imagem;
+            this.x = x;
+            this.y = y;
+        }
     }
 
     public static class TelaGame extends JPanel implements MouseListener {
-
+        public static ArrayList<PlayerImagem> playerImagem = new ArrayList<PlayerImagem>();
+        int i = 0;
+        int playerImagemTamanho = 0;
         @Override
         public void paintComponent(Graphics g2) {
-
+            
             Graphics2D g = (Graphics2D) g2.create();
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
-        }
+            
+                g.drawImage(playerImagem.get(i).imagem, playerImagem.get(i).x, playerImagem.get(i).y, null);
+  
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
+                i += 1;
+                if(i > playerImagemTamanho){
+                    i = 0;
+                }
+                repaint();
+        }
+        
         @Override
         public void mouseClicked(MouseEvent e) {
             System.out.println(e.getX());
@@ -75,7 +108,7 @@ public class Minimax {
     static Integer MAX = Integer.MAX_VALUE;
     static int MIN = Integer.MIN_VALUE;
 
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) throws CloneNotSupportedException, IOException {
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
         ArrayList<Personagem> player = new ArrayList<>();
 
@@ -85,7 +118,7 @@ public class Minimax {
             playerInimigo.add(aux);
         }
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             Personagem aux = new Personagem();
             aux.id = i;
             player.add(aux);
@@ -104,11 +137,20 @@ public class Minimax {
         No no = new No();
         no.player = player;
         no.playerInimigo = playerInimigo;
-
+        
+        ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\50_Asset_90.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\60_Asset_83.png")),50,50));
+        
+        game.playerImagem.add(naruto);
+        game.playerImagemTamanho = naruto.size()-1;
+        
+        
         player.get(0).ataque = 3;
-        player.get(1).ataque = 1;
+//        player.get(1).ataque = 2;
         player.get(0).vida = 5;
         playerInimigo.get(1).vida = 4;
+        playerInimigo.get(0).vida = 2;
         playerInimigo.get(1).ataque = 4;
 
         //player.get(1).ataque = 1;

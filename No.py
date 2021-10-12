@@ -1,18 +1,12 @@
 from Personagem import Personagem
 
-
-
 class No:
-    pai = None
-    altura = None
-    alpah = 1
-    beta = -1
-    heuristica = None
+    pai = 0
+    altura = 0
+    heuristica = 0
     filho = []
+    player = []
+    playerInimigo = []
+    id = 0
+    valor = 0
     
-    def __init__(self, player, playerInimigo, idPlayer, idPlayerInimigo):
-        self.player = player
-        self.playerInimigo = playerInimigo
-        self.id = []
-        self.id.append(idPlayer)
-        self.id.append(idPlayerInimigo)
