@@ -117,6 +117,11 @@ public class Minimax {
                 selecao = new ArrayList();
                 try {
                     System.out.println("Valor: " + minimax(no, false, Integer.MIN_VALUE, Integer.MAX_VALUE));
+                    System.out.println("Gerados: " + tamanho);
+                    System.out.println("Tamanho: " + no.filho.size());
+                    for (int k = 0; k < no.filho.size(); k++) {
+                        System.out.println(k + " | " + no.filho.get(ku).valor);
+                    }
                 } catch (CloneNotSupportedException ex) {
                     Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
                 }
