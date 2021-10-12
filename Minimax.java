@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -32,10 +31,28 @@ public class Minimax {
         int ataque = 1;
         int level = 1;
         int id = 0;
+        int indice;
+        int time = 50;
+        int tempo = 0;
 
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
             return (Personagem) super.clone();
+        }
+
+        public void update(){
+            if(tempo > time){
+                if(indice > playerImagem.size()){
+                    indice = 0;
+                    System.out.println(1);
+                }
+                else{
+                    indice++;
+                }
+                indice = 0;
+                tempo = 0;
+            }
+            tempo++;
         }
     }  
     
@@ -53,8 +70,6 @@ public class Minimax {
     public static class TelaGame extends JPanel implements MouseListener {
         ArrayList<Personagem> player;
 
-        int i = 0;
-        int playerImagemTamanho = 0;
         @Override
         public void paintComponent(Graphics g2) {
             
@@ -62,19 +77,12 @@ public class Minimax {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
-            
-                g.drawImage(player.get(0).playerImagem.get(i).imagem, player.get(0).playerImagem.get(i).x, player.get(0).playerImagem.get(i).y, null);
-  
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            for(int k = 0; k < player.size(); k++){
+                g.drawImage(player.get(k).playerImagem.get(player.get(k).indice).imagem, player.get(k).playerImagem.get(player.get(k).indice).x, player.get(k).playerImagem.get(player.get(k).indice).y, null);
+                player.get(k).update();
+            }
+               
 
-                i += 1;
-                if(i > playerImagemTamanho){
-                    i = 0;
-                }
                 repaint();
         }
         
@@ -140,12 +148,12 @@ public class Minimax {
         no.playerInimigo = playerInimigo;
         
         ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\50_Asset_90.png")),50,50));
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Desktop\\Naruto\\Naruto\\60_Asset_83.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Documents\\Minimax\\Minimax\\img\\Naruto\\50_Asset_90.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File("C:\\Users\\admin\\Documents\\Minimax\\Minimax\\img\\Naruto\\60_Asset_83.png")),50,50));
         player.get(0).playerImagem = naruto;
 
         game.player = (player);
-        game.playerImagemTamanho = naruto.size()-1;
+
         
         
         player.get(0).ataque = 3;

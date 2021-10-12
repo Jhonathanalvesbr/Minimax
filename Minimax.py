@@ -26,7 +26,8 @@ def minimax(no, jogada, alpha, beta):
     if len(no.playerInimigo) == 0:
         return no.altura
 
-
+    
+    print(jogada)
     if jogada == True:
         best = -math.inf
         filhos = []
@@ -35,7 +36,7 @@ def minimax(no, jogada, alpha, beta):
         for p in no.player:
             for i in no.playerInimigo:
                 if i.vida > 0:
-                    novoFilho = No()
+                    novoFilho = No
                     novoFilho.pai = no
                     filhos.append(novoFilho)
 
@@ -45,19 +46,19 @@ def minimax(no, jogada, alpha, beta):
                     for k in no.playerInimigo:
                         if k.vida > 0:
                             playerInimigoCopy.append(copy.deepcopy(k))
-
+                    
                     novoFilho.player = playerCopy
                     novoFilho.PlayerInimigo = playerInimigoCopy
-                    
-                    i.vida = p.ataque
+                    print("Tam: " + str(len(novoFilho.player)))
+                    print("Tam: " + str(len(novoFilho.PlayerInimigo)))
+                    i.vida += p.ataque
                     novoFilho.altura = no.altura + 1
                     novoFilho.valor = no.valor = -math.inf
-                    jogada = False
+                    jogada = not jogada
                     a += 1
-                    print(1)
-                    novoFilho.valor = no.valor = max(
-                        no.valor, minimax(novoFilho, jogada, alpha, beta)
-                    )
+                    print(11)
+                    
+                    novoFilho.valor = no.valor = max(no.valor, minimax(novoFilho, jogada, alpha, beta))
                     best = max(best, novoFilho.valor)
                     alpha = max(alpha, best)
 
@@ -75,7 +76,7 @@ def minimax(no, jogada, alpha, beta):
         for i in no.playerInimigo:
             for p in no.player:
                 if p.vida > 0:
-                    novoFilho = No()
+                    novoFilho = No
                     novoFilho.pai = no
                     filhos.append(novoFilho)
 
@@ -88,15 +89,14 @@ def minimax(no, jogada, alpha, beta):
 
                     novoFilho.player = playerCopy
                     novoFilho.PlayerInimigo = playerInimigoCopy
-                    p.vida = i.ataque
+                    p.vida += i.ataque
                     novoFilho.altura = no.altura + 1
                     novoFilho.valor = no.valor = math.inf
-                    jogada = True
+                    jogada = not jogada
                     a += 1
-                    print(2)
-                    novoFilho.valor = no.valor = min(
-                        no.valor, minimax(novoFilho, jogada, alpha, beta)
-                    )
+                    print(22)
+                    
+                    novoFilho.valor = no.valor = min(no.valor, minimax(novoFilho, jogada, alpha, beta))
                     best = min(best, novoFilho.valor)
                     beta = min(beta, best)
 
@@ -113,3 +113,5 @@ no.playerInimigo = playerInimigo
 no.altura = 0
 
 print(minimax(no, True, -math.inf, math.inf))
+print(len(no.filho))
+print(a)
