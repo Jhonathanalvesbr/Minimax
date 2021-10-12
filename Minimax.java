@@ -134,6 +134,11 @@ public class Minimax {
             aux.id = i;
             player.add(aux);
         }
+        ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\50_Asset_90.png")),50,50));
+        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\60_Asset_83.png")),50,50));
+        player.get(0).playerImagem = naruto;
+
 
         JFrame frame = new JFrame("RPG");
         frame.setSize(600, 600);
@@ -141,15 +146,11 @@ public class Minimax {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ArrayList<PlayerImagem> naruto = new ArrayList<PlayerImagem>();
-        
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\50_Asset_90.png")),50,50));
-        naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\60_Asset_83.png")),50,50));
-        player.get(0).playerImagem = naruto;
+
         TelaGame game = new TelaGame(player);
+        game.setVisible(true);
         game.player = player;
         frame.add(game);
-        game.setVisible(true);
         frame.addMouseListener(game);
 
         No no = new No();
@@ -162,7 +163,7 @@ public class Minimax {
         
         
         player.get(0).ataque = 3;
-//        player.get(1).ataque = 2;
+        //player.get(1).ataque = 2;
         player.get(0).vida = 5;
         playerInimigo.get(1).vida = 4;
         playerInimigo.get(0).vida = 2;
