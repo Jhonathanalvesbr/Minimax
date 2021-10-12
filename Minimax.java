@@ -34,6 +34,8 @@ public class Minimax {
         int indice;
         int time = 50;
         int tempo = 0;
+        int x = 0;
+        int y = 0;
 
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
@@ -45,8 +47,9 @@ public class Minimax {
                 indice++;
                 if(indice > playerImagem.size()-1){
                     indice = 0;
-                } 
-
+                }
+                playerImagem.get(indice).x = x;
+                playerImagem.get(indice).y = y;
                 tempo = 0;
             }
             tempo++;
@@ -75,7 +78,7 @@ public class Minimax {
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
             for(int k = 0; k < player.size(); k++){
-                g.drawImage(player.get(k).playerImagem.get(player.get(k).indice).imagem, player.get(k).playerImagem.get(player.get(k).indice).x, player.get(k).playerImagem.get(player.get(k).indice).y, null);
+                g.drawImage(player.get(k).playerImagem.get(player.get(k).indice).imagem, player.get(k).x, player.get(k).y, null);
                 player.get(k).update();
             }
                
