@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -44,6 +43,7 @@ public class Minimax {
         int tempo = 0;
         int x = 0;
         int y = 0;
+        String nome = new String();
 
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
@@ -133,12 +133,28 @@ public class Minimax {
             }
             System.out.println(selecao);
             if (selecao.size() >= 2 && playerInimigo.size() > 0 || selecao.size() >= 2 && player.size() > 0) {
-                
+                playerInimigo.get(selecao.get(1)).vida -= player.get(selecao.get(0)).ataque;
+                System.out.println("Eu: " + player.get(selecao.get(0)).nome + " -> " + playerInimigo.get(selecao.get(1)).nome);
+                playerInimigo.get(selecao.get(1)).update();
+                for(int k = 0; k < player.size(); k++){
+                    player.get(k).update();
+                    if(player.get(k).vida <= 0){
+                        player.remove(k);
+                        k--;
+                    }
+                }
+                for(int k = 0; k < playerInimigo.size(); k++){
+                    playerInimigo.get(k).update();
+                    if(playerInimigo.get(k).vida <= 0){
+                        playerInimigo.remove(k);
+                        k--;
+                    }
+                }
                 No no = new No();
                 no.player = playerInimigo;
                 no.playerInimigo = player;
 
-                
+                if(playerInimigo.size() > 0){
                 try {
                     System.out.println("Valor: " + minimax(no, true, Integer.MIN_VALUE, Integer.MAX_VALUE));
                     System.out.println("Gerados: " + tamanho);
@@ -146,16 +162,31 @@ public class Minimax {
                     System.out.println("Tamanho: " + no.filho.size());
                     ArrayList<Integer> aux = new ArrayList();
                     ArrayList<Integer> valor = new ArrayList();
-                    valor.add(no.filho.get(0).valor);
+                    ArrayList<Integer> maior = new ArrayList();
+                    valor.add(Integer.MAX_VALUE);
                     valor.add(0);
+                    maior.add(Integer.MAX_VALUE);
+                    maior.add(0);
                     for (int k = 0; k < no.filho.size(); k++) {
                         System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao);
-                        if(no.filho.get(k).valor >=0 && no.filho.get(k).valor < valor.get(0)){
+                        if(no.filho.get(k).valor >= 0 && no.filho.get(k).valor < valor.get(0)){
+                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
                             valor.remove(0);
                             valor.remove(0);
                             valor.add(no.filho.get(k).valor);
                             valor.add(k);
                         }
+
+                        if(no.filho.get(k).valor < maior.get(0)){
+                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
+                            maior.remove(0);
+                            maior.remove(0);
+                            maior.add(no.filho.get(k).valor);
+                            maior.add(k);
+                        }
+                    }
+                    if(valor.get(0) == Integer.MAX_VALUE){
+                        valor = maior;
                     }
                     int x = 0;
                     int y = 0;
@@ -171,15 +202,16 @@ public class Minimax {
                             break;
                         }
                     }
-                    System.out.println("PLayer Morreu: " + player.size());
+                    System.out.println("PLayer Morreu: " + (4-player.size()));
+                    System.out.println("Minimax: " + playerInimigo.get(y).nome + " -> " + player.get(x).nome);
+                    System.out.println("Minimax: " + playerInimigo.get(y).id + " -> " + player.get(x).id);
                     player.get(x).vida -= playerInimigo.get(y).ataque;
-                    
+                    player.get(x).update();
                 } catch (CloneNotSupportedException ex) {
                     Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println(playerInimigo.get(1).vida);
-                playerInimigo.get(this.selecao.get(1)).vida -= player.get(this.selecao.get(0)).ataque;
-                System.out.println(playerInimigo.get(1).vida);
+            }
+                
                 selecao = new ArrayList();
             }
         }
@@ -214,7 +246,7 @@ public class Minimax {
                     player.get(k).update();
                     this.add(player.get(k).life);
                 } else {
-                    this.remove(player.get(k).life);
+                    //this.remove(player.get(k).life);
                     player.remove(k);
 
                 }
@@ -232,7 +264,7 @@ public class Minimax {
                     this.add(playerInimigo.get(k).life);
                     playerInimigo.get(k).update();
                 } else {
-                    this.remove(playerInimigo.get(k).life);
+                    //this.remove(playerInimigo.get(k).life);
                     playerInimigo.remove(k);
                 }
             }
@@ -312,12 +344,14 @@ public class Minimax {
         naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\50_Asset_90.png")), 0, 0));
         naruto.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Naruto\\60_Asset_83.png")), 0, 0));
         player.get(0).playerImagem = naruto;
+        player.get(0).nome = "Naruto";
         ArrayList<PlayerImagem> sasuke = new ArrayList<PlayerImagem>();
         sasuke.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Sasuke\\1_Asset_43.png")), 0, 0));
         sasuke.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Sasuke\\43_Asset_40.png")), 0, 0));
         sasuke.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Sasuke\\115_Asset_39.png")), 0, 0));
         sasuke.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Sasuke\\139_Asset_41.png")), 0, 0));
         player.get(1).playerImagem = sasuke;
+        player.get(1).nome = "Sasuke";
         player.get(1).y = 190;
         ArrayList<PlayerImagem> kakashi = new ArrayList<PlayerImagem>();
         kakashi.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Kakashi\\86_Asset_38.png")), 0, 0));
@@ -327,6 +361,7 @@ public class Minimax {
         kakashi.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Kakashi\\111_Asset_34.png")), 0, 0));
         kakashi.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Kakashi\\115_Asset_36.png")), 0, 0));
         player.get(2).playerImagem = kakashi;
+        player.get(2).nome = "Kakashi";
         player.get(2).y = 380;
 
         ArrayList<PlayerImagem> nagato = new ArrayList<PlayerImagem>();
@@ -340,6 +375,7 @@ public class Minimax {
         nagato.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Nagato\\126_Asset_37.png")), 0, 0));
         nagato.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Nagato\\146_Asset_39.png")), 0, 0));
         nagato = Minimax.virar(nagato);
+        playerInimigo.get(0).nome = "Nagato";
         playerInimigo.get(0).playerImagem = nagato;
         playerInimigo.get(0).x = 500;
 
@@ -348,12 +384,11 @@ public class Minimax {
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_60.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_59.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_58.png")), 0, 0));
-
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_57.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_58.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_59.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_60.png")), 0, 0));
-
+        playerInimigo.get(1).nome = "Madara";
         madara = Minimax.virar(madara);
         playerInimigo.get(1).playerImagem = madara;
         playerInimigo.get(1).x = 470;
@@ -365,6 +400,7 @@ public class Minimax {
         hashirama.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Hashirama\\Asset_22.png")), 0, 0));
         hashirama.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Hashirama\\Asset_23.png")), 0, 0));
         hashirama = Minimax.virar(hashirama);
+        playerInimigo.get(2).nome = "Hashirama";
         playerInimigo.get(2).playerImagem = hashirama;
         playerInimigo.get(2).x = 470;
         playerInimigo.get(2).y = 380;
