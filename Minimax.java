@@ -452,7 +452,8 @@ public class Minimax {
        
 
         
-        player.get(0).ataque = 10;
+        player.get(1).ataque = 10;
+
         
 
 
