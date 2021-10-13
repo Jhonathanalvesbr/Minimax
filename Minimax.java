@@ -105,6 +105,7 @@ public class Minimax {
         ArrayList<Personagem> player;
         ArrayList<Personagem> playerInimigo;
         ArrayList<Img> img = new ArrayList<>();
+        Font fontePequena = new Font("Consolas", Font.BOLD, 10);
         
         ArrayList<Integer> selecao = new ArrayList();
         boolean click = true;
@@ -235,12 +236,16 @@ public class Minimax {
             }*/
         }
         int q = 0;
-        @Override
+          @Override
         public void paintComponent(Graphics g2) {
             Graphics2D g = (Graphics2D) g2.create();
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
+
+
+            
+        
             for (int k = 0; k < player.size(); k++) {
                 if (player.get(k).vida > 0) {
                     if(q == 0){
@@ -249,6 +254,9 @@ public class Minimax {
                         aux.id = player.get(k).id;
                         img.add(aux);
                     }
+                    g.setFont(fontePequena);
+                    g.setColor(Color.green);
+                    g.drawString(" Atk: "+player.get(k).ataque, player.get(k).x+80, player.get(k).y+20);
                     g.drawImage(player.get(k).playerImagem.get(player.get(k).indice).imagem, player.get(k).x, player.get(k).y, null);
                     player.get(k).life.setBounds(80, player.get(k).y, 50, 10);
                     player.get(k).update();
@@ -266,6 +274,18 @@ public class Minimax {
                         aux.img = new Rectangle2D.Double(playerInimigo.get(k).x, playerInimigo.get(k).y, playerInimigo.get(k).playerImagem.get(playerInimigo.get(k).indice).imagem.getWidth(), playerInimigo.get(k).playerImagem.get(playerInimigo.get(k).indice).imagem.getHeight());
                         aux.id = player.get(k).id;
                         img.add(aux);
+                    }
+                    if(playerInimigo.get(k).nome == "Nagato"){
+                        g.setFont(fontePequena);
+                        g.setColor(Color.red);
+                        g.drawString(" Atk: "+playerInimigo.get(k).ataque, playerInimigo.get(k).x-45, playerInimigo.get(k).y+20);
+                        
+                    }
+                    else{
+                        g.setFont(fontePequena);
+                        g.setColor(Color.red);
+                        g.drawString(" Atk: "+playerInimigo.get(k).ataque, playerInimigo.get(k).x-15, playerInimigo.get(k).y+20);
+                        
                     }
                     g.drawImage(playerInimigo.get(k).playerImagem.get(playerInimigo.get(k).indice).imagem, playerInimigo.get(k).x, playerInimigo.get(k).y, null);
                     playerInimigo.get(k).life.setBounds(450, playerInimigo.get(k).y, 50, 10);
