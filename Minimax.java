@@ -458,9 +458,9 @@ public class Minimax {
 
 
         //player.get(0).vida = 1;
-        playerInimigo.get(1).vida = 4;
+        //playerInimigo.get(1).vida = 4;
         playerInimigo.get(0).vida = 3;
-        playerInimigo.get(2).ataque = 4;
+        //playerInimigo.get(2).ataque = 4;
         
 
          for (Personagem p : player) {
