@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.midi.Soundbank;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
@@ -27,7 +28,7 @@ public class Minimax {
         ArrayList<Personagem> playerInimigo = new ArrayList<>();
         ArrayList<Personagem> player = new ArrayList<>();
         int valor = 0;
-
+        boolean jogada;
         ArrayList<Integer> selecao = new ArrayList();
     }
 
@@ -151,8 +152,8 @@ public class Minimax {
                     }
                 }
                 No no = new No();
-                no.player = playerInimigo;
-                no.playerInimigo = player;
+                no.player = player;
+                no.playerInimigo = playerInimigo;
 
                 if(playerInimigo.size() > 0){
                 try {
@@ -168,7 +169,7 @@ public class Minimax {
                     maior.add(Integer.MAX_VALUE);
                     maior.add(0);
                     for (int k = 0; k < no.filho.size(); k++) {
-                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao);
+                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao + " -- " + no.filho.get(k).jogada);
                         if(no.filho.get(k).valor >= 0 && no.filho.get(k).valor < valor.get(0)){
                             //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
                             valor.remove(0);
@@ -186,6 +187,7 @@ public class Minimax {
                         }
                     }
                     if(valor.get(0) == Integer.MAX_VALUE){
+                        //System.out.println(valor.get(0));
                         valor = maior;
                     }
                     int x = 0;
@@ -202,7 +204,7 @@ public class Minimax {
                             break;
                         }
                     }
-                    System.out.println("PLayer Morreu: " + (4-player.size()));
+                    System.out.println("PLayer Morreu: " + (3-player.size()));
                     System.out.println("Minimax: " + playerInimigo.get(y).nome + " -> " + player.get(x).nome);
                     System.out.println("Minimax: " + playerInimigo.get(y).id + " -> " + player.get(x).id);
                     player.get(x).vida -= playerInimigo.get(y).ataque;
@@ -422,13 +424,12 @@ public class Minimax {
 
        
 
-        player.get(1).ataque = 3;
-        player.get(0).ataque = 1;
-        //player.get(1).ataque = 2;
-        player.get(1).vida = 2;
-        playerInimigo.get(1).vida = 4;
-        playerInimigo.get(0).vida = 3;
-        playerInimigo.get(1).ataque = 4;
+        
+        player.get(2).ataque = 5;
+        //player.get(0).vida = 1;
+        //playerInimigo.get(1).vida = 4;
+        //playerInimigo.get(0).vida = 3;
+        //playerInimigo.get(1).ataque = 4;
         
 
          for (Personagem p : player) {
@@ -476,6 +477,7 @@ public class Minimax {
                     if (no.playerInimigo.get(j).vida > 0 && no.player.get(i).vida > 0 ) {
                         No novoFilho = new No();
                         novoFilho.pai = no;
+                        novoFilho.jogada = jogada;
                         no.filho.add(novoFilho);
                         novoFilho.selecao.add(no.player.get(i).id);
                         novoFilho.selecao.add(no.playerInimigo.get(j).id);
@@ -496,6 +498,7 @@ public class Minimax {
                         }
                         tamanho += 1;
                         novoFilho.valor = no.valor = MIN;
+
                         novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
                         best = Math.max(best, novoFilho.valor);
                         alpha = Math.max(alpha, best);
@@ -513,6 +516,7 @@ public class Minimax {
                     if (no.player.get(j).vida > 0 && no.playerInimigo.get(i).vida > 0) {
                         No novoFilho = new No();
                         novoFilho.pai = no;
+                        novoFilho.jogada = jogada;
                         no.filho.add(novoFilho);
                         novoFilho.selecao.add(no.playerInimigo.get(i).id);
                         novoFilho.selecao.add(no.player.get(j).id);
@@ -534,7 +538,7 @@ public class Minimax {
                         }
                         tamanho += 1;
                         novoFilho.valor = no.valor = MAX;
-                        jogada = !jogada;
+
                         novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
                         best = Math.min(best, novoFilho.valor);
                         beta = Math.min(beta, best);
