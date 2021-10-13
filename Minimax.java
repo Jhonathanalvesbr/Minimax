@@ -45,6 +45,7 @@ public class Minimax {
         int x = 0;
         int y = 0;
         String nome = new String();
+        boolean isPlayer = false;
 
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
@@ -113,11 +114,16 @@ public class Minimax {
         public void escolhe(int i) {
             if (click) {
                 int k = 0;
+                int e = 0;
                 for (Personagem personagem : player) {
                     if(personagem.id == i){
+                        e = 1;
                         break;
                     }
                     k++;
+                }
+                if(e == 0){
+                    return;
                 }
                 selecao.add(k);
                 click = !click;
@@ -336,6 +342,7 @@ public class Minimax {
             aux.life.setForeground(Color.green);
             aux.life.setValue(aux.vida);
             aux.life.setVisible(true);
+            aux.isPlayer = true;
             player.add(aux);
         }
 
@@ -425,7 +432,7 @@ public class Minimax {
        
 
         
-        player.get(2).ataque = 5;
+        player.get(1).ataque = 5;
 
         //player.get(0).vida = 1;
         playerInimigo.get(1).vida = 4;
