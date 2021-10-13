@@ -152,12 +152,12 @@ public class Minimax {
                     }
                 }
                 No no = new No();
-                no.player = player;
-                no.playerInimigo = playerInimigo;
+                no.player = playerInimigo;
+                no.playerInimigo = player;
 
                 if(playerInimigo.size() > 0){
                 try {
-                    System.out.println("Valor: " + minimax(no, true, Integer.MIN_VALUE, Integer.MAX_VALUE));
+                    System.out.println("Valor: " + minimax(no, false, Integer.MIN_VALUE, Integer.MAX_VALUE));
                     System.out.println("Gerados: " + tamanho);
                     tamanho = 0;
                     System.out.println("Tamanho: " + no.filho.size());
@@ -194,21 +194,21 @@ public class Minimax {
                     int y = 0;
                     for (int j = 0; j < player.size(); j++) {
                         if(player.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)){
-                            x = j;
+                            y = j;
                             break;
                         }
                     }
                     for (int j = 0; j < playerInimigo.size(); j++) {
                         if(playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)){
-                            y = j;
+                            x = j;
                             break;
                         }
                     }
                     System.out.println("PLayer Morreu: " + (3-player.size()));
-                    System.out.println("Minimax: " + playerInimigo.get(y).nome + " -> " + player.get(x).nome);
-                    System.out.println("Minimax: " + playerInimigo.get(y).id + " -> " + player.get(x).id);
-                    player.get(x).vida -= playerInimigo.get(y).ataque;
-                    player.get(x).update();
+                    System.out.println("Minimax: " + playerInimigo.get(x).nome + " -> " + player.get(y).nome);
+                    System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
+                    player.get(y).vida -= playerInimigo.get(x).ataque;
+                    player.get(y).update();
                 } catch (CloneNotSupportedException ex) {
                     Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -426,10 +426,11 @@ public class Minimax {
 
         
         player.get(2).ataque = 5;
+
         //player.get(0).vida = 1;
-        //playerInimigo.get(1).vida = 4;
-        //playerInimigo.get(0).vida = 3;
-        //playerInimigo.get(1).ataque = 4;
+        playerInimigo.get(1).vida = 4;
+        playerInimigo.get(0).vida = 3;
+        playerInimigo.get(1).ataque = 4;
         
 
          for (Personagem p : player) {
@@ -474,7 +475,7 @@ public class Minimax {
             int best = MIN;
             for (int i = 0; i < no.player.size(); i++) {
                 for (int j = 0; j < no.playerInimigo.size(); j++) {
-                    if (no.playerInimigo.get(j).vida > 0 && no.player.get(i).vida > 0 ) {
+                    
                         No novoFilho = new No();
                         novoFilho.pai = no;
                         novoFilho.jogada = jogada;
@@ -505,7 +506,7 @@ public class Minimax {
                         if (beta <= alpha) {
                             break;
                         }
-                    }
+                    
                 }
             }
             return best;
@@ -513,7 +514,7 @@ public class Minimax {
             int best = MAX;
             for (int i = 0; i < no.playerInimigo.size(); i++) {
                 for (int j = 0; j < no.player.size(); j++) {
-                    if (no.player.get(j).vida > 0 && no.playerInimigo.get(i).vida > 0) {
+                    
                         No novoFilho = new No();
                         novoFilho.pai = no;
                         novoFilho.jogada = jogada;
@@ -545,7 +546,7 @@ public class Minimax {
                         if (beta <= alpha) {
                             break;
                         }
-                    }
+                    
                 }
             }
             return best;
