@@ -171,13 +171,13 @@ public class Minimax {
                     ArrayList<Integer> aux = new ArrayList();
                     ArrayList<Integer> valor = new ArrayList();
                     ArrayList<Integer> maior = new ArrayList();
-                    valor.add(Integer.MAX_VALUE);
+                    valor.add(Integer.MIN_VALUE);
                     valor.add(0);
-                    maior.add(Integer.MAX_VALUE);
+                    maior.add(Integer.MIN_VALUE);
                     maior.add(0);
                     for (int k = 0; k < no.filho.size(); k++) {
                         System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao + " -- " + no.filho.get(k).jogada);
-                        if(no.filho.get(k).valor >= 0 && no.filho.get(k).valor < valor.get(0)){
+                        if(no.filho.get(k).valor <= 0 && no.filho.get(k).valor > valor.get(0)){
                             //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
                             valor.remove(0);
                             valor.remove(0);
@@ -193,7 +193,7 @@ public class Minimax {
                             maior.add(k);
                         }
                     }
-                    if(valor.get(0) == Integer.MAX_VALUE){
+                    if(valor.get(0) == Integer.MIN_VALUE){
                         //System.out.println(valor.get(0));
                         valor = maior;
                     }
@@ -201,13 +201,13 @@ public class Minimax {
                     int y = 0;
                     for (int j = 0; j < player.size(); j++) {
                         if(player.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)){
-                            x = j;
+                            y = j;
                             break;
                         }
                     }
                     for (int j = 0; j < playerInimigo.size(); j++) {
                         if(playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)){
-                            y = j;
+                            x = j;
                             break;
                         }
                     }
@@ -452,13 +452,14 @@ public class Minimax {
        
 
         
-        player.get(1).ataque = 4;
+        player.get(0).ataque = 10;
+        
 
 
         //player.get(0).vida = 1;
         playerInimigo.get(1).vida = 4;
         playerInimigo.get(0).vida = 3;
-        playerInimigo.get(1).ataque = 4;
+        playerInimigo.get(2).ataque = 4;
         
 
          for (Personagem p : player) {
