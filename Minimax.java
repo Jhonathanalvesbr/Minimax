@@ -114,15 +114,16 @@ public class Minimax {
                 selecao.add(i);
                 click = !click;
             }
-            if (selecao.size() >= 2 && playerInimigo.size() > 0 || selecao.size() >= 2 && player.size() > 0) {
+            if (selecao.size() >= 2 && selecao.get(1) < playerInimigo.size() && selecao.get(0) < player.size() && selecao.size() >= 2 && playerInimigo.size() > 0 || selecao.size() >= 2 && player.size() > 0) {
+                playerInimigo.get(selecao.get(1)).vida -= player.get(selecao.get(0)).ataque;
                 
                 No no = new No();
-                no.player = playerInimigo;
-                no.playerInimigo = player;
+                no.player = player;
+                no.playerInimigo = playerInimigo;
 
                 
                 try {
-                    System.out.println("Valor: " + minimax(no, true, Integer.MIN_VALUE, Integer.MAX_VALUE));
+                    System.out.println("Valor: " + minimax(no, false, Integer.MIN_VALUE, Integer.MAX_VALUE));
                     System.out.println("Gerados: " + tamanho);
                     tamanho = 0;
                     System.out.println("Tamanho: " + no.filho.size());
@@ -132,7 +133,7 @@ public class Minimax {
                     valor.add(0);
                     for (int k = 0; k < no.filho.size(); k++) {
                         System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao);
-                        if(no.filho.get(k).valor >=0 && no.filho.get(k).valor < valor.get(0)){
+                        if(no.filho.get(k).valor >= 0 && no.filho.get(k).valor < valor.get(0)){
                             valor.remove(0);
                             valor.remove(0);
                             valor.add(no.filho.get(k).valor);
@@ -141,6 +142,8 @@ public class Minimax {
                     }
                     int x = 0;
                     int y = 0;
+                    System.out.println("x: " + no.filho.get(valor.get(1)).selecao.get(0));
+                    System.out.println("y: " + no.filho.get(valor.get(1)).selecao.get(1));
                     for (int j = 0; j < player.size(); j++) {
                         if(player.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)){
                             x = j;
@@ -153,15 +156,15 @@ public class Minimax {
                             break;
                         }
                     }
+                    System.out.println("x: " + x);
+                    System.out.println("y: " + y);
                     System.out.println("PLayer Morreu: " + player.size());
-                    player.get(x).vida -= playerInimigo.get(y).ataque;
+                    player.get(y).vida -= playerInimigo.get(x).ataque;
                     
                 } catch (CloneNotSupportedException ex) {
                     Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println(playerInimigo.get(1).vida);
-                playerInimigo.get(this.selecao.get(1)).vida -= player.get(this.selecao.get(0)).ataque;
-                System.out.println(playerInimigo.get(1).vida);
+
                 selecao = new ArrayList();
             }
         }
@@ -380,7 +383,7 @@ public class Minimax {
 
        
 
-        player.get(1).ataque = 3;
+        player.get(0).ataque = 3;
         player.get(0).ataque = 1;
         //player.get(1).ataque = 2;
         player.get(1).vida = 2;
@@ -431,7 +434,7 @@ public class Minimax {
             int best = MIN;
             for (int i = 0; i < no.player.size(); i++) {
                 for (int j = 0; j < no.playerInimigo.size(); j++) {
-                    if (no.playerInimigo.get(j).vida > 0 && no.player.get(i).vida > 0 ) {
+                    if (no.playerInimigo.get(j).vida > 0 && no.player.get(i).vida > 0) {
                         No novoFilho = new No();
                         novoFilho.pai = no;
                         no.filho.add(novoFilho);
