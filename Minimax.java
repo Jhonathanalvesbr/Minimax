@@ -201,13 +201,13 @@ public class Minimax {
                     int y = 0;
                     for (int j = 0; j < player.size(); j++) {
                         if(player.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)){
-                            y = j;
+                            x = j;
                             break;
                         }
                     }
                     for (int j = 0; j < playerInimigo.size(); j++) {
                         if(playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)){
-                            x = j;
+                            y = j;
                             break;
                         }
                     }
