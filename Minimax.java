@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -12,10 +11,12 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.sound.midi.Soundbank;
+
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
@@ -120,8 +121,9 @@ public class Minimax {
         No no;
         String ataque = "";
         int ataqueTime = 0;
+        int limite = 400;
 
-        public void escolhe(int i) {
+        public void escolhe(int i) throws CloneNotSupportedException {
             if (click) {
                 int k = 0;
                 int e = 0;
@@ -148,10 +150,10 @@ public class Minimax {
                 selecao.add(k);
                 click = !click;
             }
-            System.out.println(selecao);
+            //System.out.println(selecao);
             if (selecao.size() >= 2 && playerInimigo.size() > 0 || selecao.size() >= 2 && player.size() > 0) {
                 playerInimigo.get(selecao.get(1)).vida -= player.get(selecao.get(0)).ataque;
-                System.out.println("Eu: " + player.get(selecao.get(0)).nome + " -> " + playerInimigo.get(selecao.get(1)).nome);
+                //System.out.println("Eu: " + player.get(selecao.get(0)).nome + " -> " + playerInimigo.get(selecao.get(1)).nome);
                 playerInimigo.get((selecao.get(1))).update();
                 if (playerInimigo.get((selecao.get(1))).vida <= 0) {
                     playerInimigo.remove(playerInimigo.get((selecao.get(1))));
@@ -162,71 +164,83 @@ public class Minimax {
                 no.playerInimigo = playerInimigo;
 
                 if (playerInimigo.size() > 0) {
-                    try {
-                        maximo = Integer.MIN_VALUE;
-                        System.out.println("Valor: " + minimax(no, true, MIN, MAX));
-                        System.out.println("Gerados: " + tamanho);
-                        tamanho = 0;
-                        System.out.println("Tamanho: " + no.filho.size());
-                        System.out.println("Minimo: " + maximo);
-                        ArrayList<Integer> aux = new ArrayList();
-                        ArrayList<Integer> valor = new ArrayList();
-                        ArrayList<Integer> maior = new ArrayList();
-                        valor.add(Integer.MAX_VALUE);
-                        valor.add(0);
-                        maior.add(Integer.MAX_VALUE);
-                        maior.add(0);
-                        for (int k = 0; k < no.filho.size(); k++) {
-                            System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao + " -- " + no.filho.get(k).jogada);
-                            if (no.filho.get(k).valor > 0 && no.filho.get(k).valor < valor.get(0)) {
-                                //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
-                                valor.remove(0);
-                                valor.remove(0);
-                                valor.add(no.filho.get(k).valor);
-                                valor.add(k);
-                            }
 
-                            if (no.filho.get(k).valor < maior.get(0)) {
-                                //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
-                                maior.remove(0);
-                                maior.remove(0);
-                                maior.add(no.filho.get(k).valor);
-                                maior.add(k);
-                            }
+                    maximo = Integer.MIN_VALUE;
+                    minimax(no, true, MIN, MAX);
+                    System.out.println("Nos Gerados: " + tamanho);
+                    tamanho = 0;
+                    System.out.println("Quantidade de filhos: " + no.filho.size());
+                    //System.out.println("Minimo: " + maximo);
+                    ArrayList<Integer> aux = new ArrayList();
+                    ArrayList<Integer> valor = new ArrayList();
+                    ArrayList<Integer> maior = new ArrayList();
+                    valor.add(Integer.MAX_VALUE);
+                    valor.add(0);
+                    maior.add(Integer.MAX_VALUE);
+                    maior.add(0);
+                    ArrayList<Integer> vetor = new ArrayList<>();
+                    for (int k = 0; k < no.filho.size(); k++) {
+                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao + " -- " + no.filho.get(k).jogada);
+                        if (no.filho.get(k).valor > 0 && no.filho.get(k).valor < valor.get(0)) {
+                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
+                            valor.remove(0);
+                            valor.remove(0);
+                            valor.add(no.filho.get(k).valor);
+                            valor.add(k);
                         }
-                        System.out.println("============ " + valor.get(0));
-                        if (valor.get(0) == Integer.MAX_VALUE) {
-                            //System.out.println(valor.get(0));
-                            valor = maior;
+                        vetor.add(no.filho.get(k).valor);
+                        if (no.filho.get(k).valor < maior.get(0)) {
+                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
+                            maior.remove(0);
+                            maior.remove(0);
+                            maior.add(no.filho.get(k).valor);
+                            maior.add(k);
                         }
-                        int x = 0;
-                        int y = 0;
-                        for (int j = 0; j < playerInimigo.size(); j++) {
-                            if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
-                                x = j;
-                                break;
-                            }
-                        }
-                        for (int j = 0; j < player.size(); j++) {
-                            if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
-                                y = j;
-                                break;
-                            }
-                        }
-                        System.out.println("PLayer Morreu: " + (3 - player.size()));
-                        System.out.println("Minimax: " + playerInimigo.get(x).nome + " -> " + player.get(y).nome);
-                        System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
-                        player.get(y).vida -= playerInimigo.get(x).ataque;
-                        player.get(y).update();
-                        ataque = playerInimigo.get(x).nome + " -> " + player.get(y).nome;
-                        ataqueTime = 0;
-                        if (player.get(y).vida <= 0) {
-                            player.remove(player.get(y));
-                        }
-
-                    } catch (CloneNotSupportedException ex) {
-                        Logger.getLogger(remove.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    System.out.println("Seleção " + valor.get(0));
+                    if (valor.get(0) == Integer.MAX_VALUE) {
+                        //System.out.println(valor.get(0));
+                        valor = maior;
+                    }
+                    int k = 0;
+                    for (int j = 0; j < vetor.size() - 1; j++) {
+                        if (vetor.get(j) == vetor.get(j + 1)) {
+                            k++;
+                        }
+                    }
+                    if (k+1 == vetor.size()) {
+                        Random gerador = new Random();
+                        valor.remove(0);
+                        valor.remove(0);
+                        valor.add(0);
+                        valor.add(gerador.nextInt(vetor.size()));
+                        System.out.println("Random: " + valor.get(1));
+                    }
+                    int x = 0;
+                    int y = 0;
+                    for (int j = 0; j < playerInimigo.size(); j++) {
+                        if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
+                            x = j;
+                            break;
+                        }
+                    }
+                    for (int j = 0; j < player.size(); j++) {
+                        if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
+                            y = j;
+                            break;
+                        }
+                    }
+                    //System.out.println("PLayer Morreu: " + (3 - player.size()));
+                    //System.out.println("Minimax: " + playerInimigo.get(x).nome + " -> " + player.get(y).nome);
+                    //System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
+                    player.get(y).vida -= playerInimigo.get(x).ataque;
+                    player.get(y).update();
+                    ataque = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
+                    ataqueTime = 0;
+                    if (player.get(y).vida <= 0) {
+                        player.remove(player.get(y));
+                    }
+
                 }
 
                 selecao = new ArrayList();
@@ -257,7 +271,7 @@ public class Minimax {
 
             if (ataque != "") {
                 ataqueTime++;
-                if (ataqueTime == 300) {
+                if (ataqueTime == limite) {
                     ataque = "";
                     ataqueTime = 0;
                 }
@@ -329,7 +343,11 @@ public class Minimax {
 
             for (int i = 0; i < img.size(); i++) {
                 if (img.get(i).img.contains(p)) {
-                    escolhe(img.get(i).id);
+                    try {
+                        escolhe(img.get(i).id);
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 }
             }
