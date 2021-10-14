@@ -132,6 +132,7 @@ public class Minimax {
                     if (personagem.nome == i) {
                         e = 1;
                         ataqueString = personagem.nome;
+                        ataqueTime = 0;
                         break;
                     }
                     k++;
@@ -143,9 +144,22 @@ public class Minimax {
                 click = !click;
             } else {
                 int k = 0;
-                for (Personagem personagem : playerInimigo) {
-                    if (personagem.nome == i) {
-                        break;
+                for (Personagem personagem : player) {
+                    for(int j = 0; j < player.size(); j++){
+                        if(player.get(j).nome == i){
+                            ataqueString = player.get(j).nome;
+                            ataqueTime = 0;
+                            selecao.remove(0);
+                            selecao.add(j);
+                            click = false;
+                            System.out.println(selecao);
+                            return;
+                        }
+                    }
+                }
+                    for (Personagem personagem : playerInimigo) {
+                        if (personagem.nome == i) {
+                            break;
                     }
                     k++;
                 }
