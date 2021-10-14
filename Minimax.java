@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -104,7 +105,7 @@ public class Minimax {
     public static class Img {
 
         Rectangle2D img;
-        int id;
+        String nome;
     }
 
     static int maximo = Integer.MIN_VALUE;
@@ -119,17 +120,18 @@ public class Minimax {
         ArrayList<Integer> selecao = new ArrayList();
         boolean click = true;
         No no;
-        String ataque = "";
+        String ataqueString = "";
         int ataqueTime = 0;
         int limite = 400;
 
-        public void escolhe(int i) throws CloneNotSupportedException {
+        public void escolhe(String i) throws CloneNotSupportedException {
             if (click) {
                 int k = 0;
                 int e = 0;
                 for (Personagem personagem : player) {
-                    if (personagem.id == i) {
+                    if (personagem.nome == i) {
                         e = 1;
+                        ataqueString = personagem.nome;
                         break;
                     }
                     k++;
@@ -142,7 +144,7 @@ public class Minimax {
             } else {
                 int k = 0;
                 for (Personagem personagem : playerInimigo) {
-                    if (personagem.id == i) {
+                    if (personagem.nome == i) {
                         break;
                     }
                     k++;
@@ -179,14 +181,21 @@ public class Minimax {
                     maior.add(Integer.MAX_VALUE);
                     maior.add(0);
                     ArrayList<Integer> vetor = new ArrayList<>();
+                    int numPositivo = 0;
+                    int numNegativo = 0;
                     for (int k = 0; k < no.filho.size(); k++) {
-                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao + " -- " + no.filho.get(k).jogada);
+                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao /*+ " -- " + no.filho.get(k).jogada*/);
                         if (no.filho.get(k).valor > 0 && no.filho.get(k).valor < valor.get(0)) {
                             //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
                             valor.remove(0);
                             valor.remove(0);
                             valor.add(no.filho.get(k).valor);
                             valor.add(k);
+                        }
+                        if (no.filho.get(k).valor >= 0) {
+                            numPositivo++;
+                        } else {
+                            numNegativo++;
                         }
                         vetor.add(no.filho.get(k).valor);
                         if (no.filho.get(k).valor < maior.get(0)) {
@@ -197,7 +206,7 @@ public class Minimax {
                             maior.add(k);
                         }
                     }
-                    System.out.println("Seleção " + valor.get(0));
+                    System.out.println("Seleção: " + valor.get(1));
                     if (valor.get(0) == Integer.MAX_VALUE) {
                         //System.out.println(valor.get(0));
                         valor = maior;
@@ -208,7 +217,7 @@ public class Minimax {
                             k++;
                         }
                     }
-                    if (k+1 == vetor.size()) {
+                    if (k + 1 == vetor.size()) {
                         Random gerador = new Random();
                         valor.remove(0);
                         valor.remove(0);
@@ -235,7 +244,7 @@ public class Minimax {
                     //System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
                     player.get(y).vida -= playerInimigo.get(x).ataque;
                     player.get(y).update();
-                    ataque = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
+                    ataqueString = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
                     ataqueTime = 0;
                     if (player.get(y).vida <= 0) {
                         player.remove(player.get(y));
@@ -266,13 +275,18 @@ public class Minimax {
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
             g.setFont(fonteGrande);
-            g.setColor(Color.red);
-            g.drawString(ataque, 180, 250);
+            if (ataqueString.length() < 10) {
+                g.setColor(Color.green);
+                g.drawString(ataqueString, 220, 250);
+            } else {
+                g.setColor(Color.red);
+                g.drawString(ataqueString, 180, 250);
+            }
 
-            if (ataque != "") {
+            if (ataqueString != "") {
                 ataqueTime++;
                 if (ataqueTime == limite) {
-                    ataque = "";
+                    ataqueString = "";
                     ataqueTime = 0;
                 }
             }
@@ -282,7 +296,7 @@ public class Minimax {
                     if (q == 0) {
                         Img aux = new Img();
                         aux.img = new Rectangle2D.Double(player.get(k).x, player.get(k).y, player.get(k).playerImagem.get(player.get(k).indice).imagem.getWidth(), player.get(k).playerImagem.get(player.get(k).indice).imagem.getHeight());
-                        aux.id = player.get(k).id;
+                        aux.nome = player.get(k).nome;
                         img.add(aux);
                     }
                     g.setFont(fontePequena);
@@ -306,7 +320,7 @@ public class Minimax {
                     if (q == 0) {
                         Img aux = new Img();
                         aux.img = new Rectangle2D.Double(playerInimigo.get(k).x, playerInimigo.get(k).y, playerInimigo.get(k).playerImagem.get(playerInimigo.get(k).indice).imagem.getWidth(), playerInimigo.get(k).playerImagem.get(playerInimigo.get(k).indice).imagem.getHeight());
-                        aux.id = playerInimigo.get(k).id;
+                        aux.nome = playerInimigo.get(k).nome;
                         img.add(aux);
                     }
                     if (playerInimigo.get(k).nome == "Nagato") {
@@ -344,7 +358,7 @@ public class Minimax {
             for (int i = 0; i < img.size(); i++) {
                 if (img.get(i).img.contains(p)) {
                     try {
-                        escolhe(img.get(i).id);
+                        escolhe(img.get(i).nome);
                     } catch (CloneNotSupportedException ex) {
                         Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -484,11 +498,11 @@ public class Minimax {
 
         frame.addMouseListener(game);
 
-        player.remove(0);
-        playerInimigo.get(0).vida = 3;
+       // player.remove(0);
+        playerInimigo.get(0).vida = 2;
 
-        player.remove(1);
-        player.get(0).vida = 8;
+       // player.remove(1);
+        player.get(0).vida = 2;
         //playerInimigo.remove(0);
         playerInimigo.get(1).ataque = 3;
 
