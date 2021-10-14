@@ -240,7 +240,7 @@ public class Minimax {
                         }
                     }
                     //System.out.println("PLayer Morreu: " + (3 - player.size()));
-                    //System.out.println("Minimax: " + playerInimigo.get(x).nome + " -> " + player.get(y).nome);
+                    System.out.println("Minimax: " + player.get(y).nome + " <- " + playerInimigo.get(x).nome);
                     //System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
                     player.get(y).vida -= playerInimigo.get(x).ataque;
                     player.get(y).update();
@@ -498,13 +498,14 @@ public class Minimax {
 
         frame.addMouseListener(game);
 
-       // player.remove(0);
+        // player.remove(0);
         playerInimigo.get(0).vida = 2;
 
-       // player.remove(1);
+        // player.remove(1);
         player.get(0).vida = 2;
+        player.get(0).ataque = 5;
         //playerInimigo.remove(0);
-        playerInimigo.get(1).ataque = 3;
+        playerInimigo.get(2).ataque = 3;
 
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
