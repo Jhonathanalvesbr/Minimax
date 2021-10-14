@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -15,12 +14,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.sound.midi.Soundbank;
+
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
-import javax.swing.UIManager;
 
-public class Minimax2 {
+public class MinimaxUpdateAtual {
 
     public static class No {
 
@@ -86,7 +84,7 @@ public class Minimax2 {
 
     public static ArrayList<PlayerImagem> virar(ArrayList<PlayerImagem> imagem) {
         for (int i = 0; i < imagem.size(); i++) {
-            imagem.get(i).imagem = Minimax2.flip(imagem.get(i).imagem);
+            imagem.get(i).imagem = MinimaxUpdateAtual.flip(imagem.get(i).imagem);
         }
         return imagem;
     }
@@ -153,12 +151,13 @@ public class Minimax2 {
                 playerInimigo.get(selecao.get(1)).vida -= player.get(selecao.get(0)).ataque;
                 System.out.println("Eu: " + player.get(selecao.get(0)).nome + " -> " + playerInimigo.get(selecao.get(1)).nome);
                 playerInimigo.get((selecao.get(1))).update();
-                
+                if(playerInimigo.get((selecao.get(1))).vida <= 0)
+                playerInimigo.remove(playerInimigo.get((selecao.get(1))));
 
                 
                 No no = new No();
                 no.player = player;
-                no.playerInimigo = this.playerInimigo;
+                no.playerInimigo = playerInimigo;
 
                 if (playerInimigo.size() > 0) {
                     try {
@@ -200,15 +199,15 @@ public class Minimax2 {
                         }
                         int x = 0;
                         int y = 0;
-                        for (int j = 0; j < player.size(); j++) {
-                            if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
-                                y = j;
+                        for (int j = 0; j < playerInimigo.size(); j++) {
+                            if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
+                                x = j;
                                 break;
                             }
                         }
-                        for (int j = 0; j < playerInimigo.size(); j++) {
-                            if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
-                                x = j;
+                        for (int j = 0; j < player.size(); j++) {
+                            if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
+                                y = j;
                                 break;
                             }
                         }
@@ -401,7 +400,7 @@ public class Minimax2 {
         nagato.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Nagato\\95_Asset_146.png")), 0, 0));
         nagato.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Nagato\\126_Asset_37.png")), 0, 0));
         nagato.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Nagato\\146_Asset_39.png")), 0, 0));
-        nagato = Minimax2.virar(nagato);
+        nagato = MinimaxUpdateAtual.virar(nagato);
         playerInimigo.get(0).nome = "Nagato";
         playerInimigo.get(0).playerImagem = nagato;
         playerInimigo.get(0).x = 500;
@@ -416,7 +415,7 @@ public class Minimax2 {
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_59.png")), 0, 0));
         madara.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Madara\\Asset_60.png")), 0, 0));
         playerInimigo.get(1).nome = "Madara";
-        madara = Minimax2.virar(madara);
+        madara = MinimaxUpdateAtual.virar(madara);
         playerInimigo.get(1).playerImagem = madara;
         playerInimigo.get(1).x = 470;
         playerInimigo.get(1).y = 170;
@@ -426,7 +425,7 @@ public class Minimax2 {
         hashirama.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Hashirama\\Asset_21.png")), 0, 0));
         hashirama.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Hashirama\\Asset_22.png")), 0, 0));
         hashirama.add(new PlayerImagem((BufferedImage) ImageIO.read(new File(System.getProperty("user.dir") + "\\img\\Hashirama\\Asset_23.png")), 0, 0));
-        hashirama = Minimax2.virar(hashirama);
+        hashirama = MinimaxUpdateAtual.virar(hashirama);
         playerInimigo.get(2).nome = "Hashirama";
         playerInimigo.get(2).playerImagem = hashirama;
         playerInimigo.get(2).x = 470;
@@ -447,11 +446,13 @@ public class Minimax2 {
 
         frame.addMouseListener(game);
 
-        player.get(1).ataque = 10;
-        player.get(0).vida = 1;
-        player.get(1).vida = 2;
-        player.get(2).vida = 3;
-        playerInimigo.get(0).ataque = 11;
+        //player.get(2).ataque = 3;
+        player.get(1).vida = 4;
+
+    
+        playerInimigo.get(2).ataque = 3;
+
+
 
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
@@ -490,15 +491,19 @@ public class Minimax2 {
                 maximo = -no.altura;
             }
             //System.out.println(no.altura);
-            return no.altura + no.heuristica;
+            return no.altura ;
         }
         if (no.playerInimigo.size() == 0) {
+            if (maximo < -no.altura) {
+                maximo = -no.altura;
+            }
             //System.out.println(no.altura);
-            return -no.altura + no.heuristica;
+            return -no.altura ;
         }
+
         tamanho++;
         if (jogada) {
-
+            int best = MIN;
 
             for (int i = 0; i < no.playerInimigo.size(); i++) {
                 for (int j = 0; j < no.player.size(); j++) {
@@ -536,21 +541,21 @@ public class Minimax2 {
                     }
                     //novoFilho.heuristica = no.player.size();
                     //novoFilho.heuristica += novoFilho.playerInimigo.size();
-                    novoFilho.valor = minimax(novoFilho, false, alpha, beta);
-                    alpha = Math.max(alpha, novoFilho.valor);
+                    novoFilho.valor = no.valor = MIN;
 
-                    // Alpha Beta Pruning
-                    if (alpha >= beta) {
-                        return alpha;
-                    }
+                        novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
+                        best = Math.max(best, novoFilho.valor);
+                        alpha = Math.max(alpha, best);
+                        if (beta <= alpha) {
+                            break;
+                        }
+                    
                 }
-
             }
-
-            return alpha;
+            return best;
         } else {
 
-
+            int best = MAX;
             for (int i = 0; i < no.player.size(); i++) {
                 for (int j = 0; j < no.playerInimigo.size(); j++) {
                     No novoFilho = new No();
@@ -586,17 +591,18 @@ public class Minimax2 {
                     //novoFilho.heuristica = no.playerInimigo.size();
                     //novoFilho.heuristica += novoFilho.player.size();
                     //System.out.println(2);
-                    novoFilho.valor = minimax(novoFilho, true, alpha, beta);
+                    novoFilho.valor = no.valor = MAX;
 
-                    beta = Math.min(beta, novoFilho.valor);
-
-                    if (alpha >= beta) {
-                        return beta;
-                    }
-
+                        novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
+                        best = Math.min(best, novoFilho.valor);
+                        beta = Math.min(beta, best);
+                        if (beta <= alpha) {
+                            break;
+                        }
+                    
                 }
             }
-            return beta;
+            return best;
         }
     }
 }
