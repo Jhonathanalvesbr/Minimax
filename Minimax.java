@@ -13,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.sound.midi.Soundbank;
-
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,7 +120,139 @@ public class Minimax {
         No no;
         String ataqueString = "";
         int ataqueTime = 0;
-        int limite = 400;
+        int limite = 2000;
+        boolean ataquePlayer = false;
+        int ataquePlayerMaximo = 2000;
+        int ataquePlayerTime = 0;
+        boolean vezMaquina = true;
+        boolean altomatico = false;
+
+        public void ataqueMax(boolean inveter) throws CloneNotSupportedException {
+            ArrayList<Personagem> auxPlayer;
+            if (inveter) {
+                auxPlayer = player;
+                player = playerInimigo;
+                playerInimigo = auxPlayer;
+            }
+            No no = new No();
+            no.player = player;
+            no.playerInimigo = playerInimigo;
+            no.heuristica = 0;
+            for (Personagem player : playerInimigo) {
+                no.heuristica += player.ataque;
+                no.heuristica += player.vida;
+            }
+            maximo = Integer.MIN_VALUE;
+            minimax(no, true, MIN, MAX);
+            System.out.println("Nos Gerados: " + tamanho);
+            tamanho = 0;
+            System.out.println("Quantidade de filhos: " + no.filho.size());
+            //System.out.println("Minimo: " + maximo);
+            ArrayList<Integer> aux = new ArrayList();
+            ArrayList<Integer> valor = new ArrayList();
+            ArrayList<Integer> maior = new ArrayList();
+            valor.add(Integer.MIN_VALUE);
+            valor.add(0);
+            maior.add(Integer.MIN_VALUE);
+            maior.add(0);
+            ArrayList<Integer> vetor = new ArrayList<>();
+            int numPositivo = 0;
+            int numNegativo = 0;
+            for (int k = 0; k < no.filho.size(); k++) {
+                System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao /*+ " -- " + no.filho.get(k).jogada*/);
+                if (no.filho.get(k).valor > 0 && no.filho.get(k).valor > valor.get(0)) {
+                    //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
+                    valor.remove(0);
+                    valor.remove(0);
+                    valor.add(no.filho.get(k).valor);
+                    valor.add(k);
+                }
+                if (no.filho.get(k).valor >= 0) {
+                    numPositivo++;
+                } else {
+                    numNegativo++;
+                }
+                vetor.add(no.filho.get(k).valor);
+                if (no.filho.get(k).valor > maior.get(0)) {
+                    //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
+                    maior.remove(0);
+                    maior.remove(0);
+                    maior.add(no.filho.get(k).valor);
+                    maior.add(k);
+                }
+            }
+            System.out.println("Seleção: " + valor.get(1));
+            if (valor.get(0) == Integer.MIN_VALUE) {
+                //System.out.println(valor.get(0));
+                valor = maior;
+            }
+            int k = 0;
+            for (int j = 0; j < vetor.size() - 1; j++) {
+                if (vetor.get(j) == vetor.get(j + 1)) {
+                    k++;
+                }
+            }
+            if (k + 1 == vetor.size()) {
+                Random gerador = new Random();
+                valor.remove(0);
+                valor.remove(0);
+                valor.add(0);
+                valor.add(gerador.nextInt(vetor.size()));
+                System.out.println("Random: " + valor.get(1));
+            }
+            int x = 0;
+            int y = 0;
+            for (int j = 0; j < playerInimigo.size(); j++) {
+                if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
+                    x = j;
+                    break;
+                }
+            }
+            for (int j = 0; j < player.size(); j++) {
+                if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
+                    y = j;
+                    break;
+                }
+            }
+            //System.out.println("PLayer Morreu: " + (3 - player.size()));
+            if (altomatico == true && inveter) {
+                System.out.println("Minimax: " + playerInimigo.get(x).nome + " -> " + player.get(y).nome);
+                ataqueString = playerInimigo.get(x).nome + " -> " + player.get(y).nome;
+            } else if (altomatico == true) {
+                System.out.println("Minimax: " + player.get(y).nome + " <- " + playerInimigo.get(x).nome);
+                ataqueString = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
+            } else {
+                System.out.println("Minimax: " + player.get(y).nome + " <- " + playerInimigo.get(x).nome);
+                ataqueString = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
+            }
+
+            //System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
+            player.get(y).vida -= playerInimigo.get(x).ataque;
+            player.get(y).update();
+            ataqueTime = 0;
+            if (player.get(y).vida <= 0) {
+                player.remove(player.get(y));
+            }
+            if (inveter) {
+                auxPlayer = player;
+                player = playerInimigo;
+                playerInimigo = auxPlayer;
+            }
+        }
+
+        public void teste() throws CloneNotSupportedException {
+            ataqueMax(false);
+        }
+
+        public void altomatico() throws CloneNotSupportedException {
+            if (ataquePlayer == true && player.size() > 0 && playerInimigo.size() > 0) {
+                ataqueMax(true);
+            }
+
+            if (ataquePlayer == false && player.size() > 0 && playerInimigo.size() > 0) {
+                ataqueMax(false);
+            }
+        }
 
         public void escolhe(String i) throws CloneNotSupportedException {
             if (click) {
@@ -145,8 +275,8 @@ public class Minimax {
             } else {
                 int k = 0;
                 for (Personagem personagem : player) {
-                    for(int j = 0; j < player.size(); j++){
-                        if(player.get(j).nome == i){
+                    for (int j = 0; j < player.size(); j++) {
+                        if (player.get(j).nome == i) {
                             ataqueString = player.get(j).nome;
                             ataqueTime = 0;
                             selecao.remove(0);
@@ -157,9 +287,9 @@ public class Minimax {
                         }
                     }
                 }
-                    for (Personagem personagem : playerInimigo) {
-                        if (personagem.nome == i) {
-                            break;
+                for (Personagem personagem : playerInimigo) {
+                    if (personagem.nome == i) {
+                        break;
                     }
                     k++;
                 }
@@ -175,101 +305,8 @@ public class Minimax {
                     playerInimigo.remove(playerInimigo.get((selecao.get(1))));
                 }
 
-                No no = new No();
-                no.player = player;
-                no.playerInimigo = playerInimigo;
-                no.heuristica = 0;
-                for (Personagem player : playerInimigo) {
-                    no.heuristica += player.ataque;
-                    no.heuristica += player.vida;
-                }
-                
-
                 if (playerInimigo.size() > 0) {
-
-                    maximo = Integer.MIN_VALUE;
-                    minimax(no, true, MIN, MAX);
-                    System.out.println("Nos Gerados: " + tamanho);
-                    tamanho = 0;
-                    System.out.println("Quantidade de filhos: " + no.filho.size());
-                    //System.out.println("Minimo: " + maximo);
-                    ArrayList<Integer> aux = new ArrayList();
-                    ArrayList<Integer> valor = new ArrayList();
-                    ArrayList<Integer> maior = new ArrayList();
-                    valor.add(Integer.MIN_VALUE);
-                    valor.add(0);
-                    maior.add(Integer.MIN_VALUE);
-                    maior.add(0);
-                    ArrayList<Integer> vetor = new ArrayList<>();
-                    int numPositivo = 0;
-                    int numNegativo = 0;
-                    for (int k = 0; k < no.filho.size(); k++) {
-                        System.out.println(k + " | " + no.filho.get(k).valor + " : " + no.filho.get(k).selecao /*+ " -- " + no.filho.get(k).jogada*/);
-                        if (no.filho.get(k).valor > 0 && no.filho.get(k).valor > valor.get(0)) {
-                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
-                            valor.remove(0);
-                            valor.remove(0);
-                            valor.add(no.filho.get(k).valor);
-                            valor.add(k);
-                        }
-                        if (no.filho.get(k).valor >= 0) {
-                            numPositivo++;
-                        } else {
-                            numNegativo++;
-                        }
-                        vetor.add(no.filho.get(k).valor);
-                        if (no.filho.get(k).valor > maior.get(0)) {
-                            //System.out.println("    : " + no.filho.get(k).playerInimigo.get(no.filho.get(k).selecao.get(0)).nome);
-                            maior.remove(0);
-                            maior.remove(0);
-                            maior.add(no.filho.get(k).valor);
-                            maior.add(k);
-                        }
-                    }
-                    System.out.println("Seleção: " + valor.get(1));
-                    if (valor.get(0) == Integer.MIN_VALUE) {
-                        //System.out.println(valor.get(0));
-                        valor = maior;
-                    }
-                    int k = 0;
-                    for (int j = 0; j < vetor.size() - 1; j++) {
-                        if (vetor.get(j) == vetor.get(j + 1)) {
-                            k++;
-                        }
-                    }
-                    if (k + 1 == vetor.size()) {
-                        Random gerador = new Random();
-                        valor.remove(0);
-                        valor.remove(0);
-                        valor.add(0);
-                        valor.add(gerador.nextInt(vetor.size()));
-                        System.out.println("Random: " + valor.get(1));
-                    }
-                    int x = 0;
-                    int y = 0;
-                    for (int j = 0; j < playerInimigo.size(); j++) {
-                        if (playerInimigo.get(j).id == no.filho.get(valor.get(1)).selecao.get(0)) {
-                            x = j;
-                            break;
-                        }
-                    }
-                    for (int j = 0; j < player.size(); j++) {
-                        if (player.get(j).id == no.filho.get(valor.get(1)).selecao.get(1)) {
-                            y = j;
-                            break;
-                        }
-                    }
-                    //System.out.println("PLayer Morreu: " + (3 - player.size()));
-                    System.out.println("Minimax: " + player.get(y).nome + " <- " + playerInimigo.get(x).nome);
-                    //System.out.println("Minimax: " + playerInimigo.get(x).id + " -> " + player.get(y).id);
-                    player.get(y).vida -= playerInimigo.get(x).ataque;
-                    player.get(y).update();
-                    ataqueString = player.get(y).nome + " <- " + playerInimigo.get(x).nome;
-                    ataqueTime = 0;
-                    if (player.get(y).vida <= 0) {
-                        player.remove(player.get(y));
-                    }
-
+                    ataqueMax(false);
                 }
 
                 selecao = new ArrayList();
@@ -295,12 +332,48 @@ public class Minimax {
             g.fillRect(0, 0, 600, 600);
             g.setStroke(new BasicStroke(3));
             g.setFont(fonteGrande);
-            if (ataqueString.length() < 10) {
-                g.setColor(Color.green);
-                g.drawString(ataqueString, 220, 250);
-            } else {
+
+            if (ataquePlayerTime > ataquePlayerMaximo / 2 && altomatico == false && vezMaquina == true) {
+                ataquePlayer = !ataquePlayer;
+                vezMaquina = false;
+                try {
+                    teste();
+                } catch (CloneNotSupportedException ex) {
+                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ataquePlayerTime = 0;
+            }
+            ataquePlayerTime++;
+
+            if (altomatico && ataquePlayerTime > ataquePlayerMaximo) {
+                if (ataquePlayer) {
+                    g.setColor(Color.green);
+                }
+                try {
+                    altomatico();
+                } catch (CloneNotSupportedException ex) {
+                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ataquePlayer = !ataquePlayer;
                 g.setColor(Color.red);
-                g.drawString(ataqueString, 180, 250);
+                ataquePlayerTime = 0;
+            }
+            if (altomatico) {
+                if (!ataquePlayer) {
+                    g.setColor(Color.green);
+                    g.drawString(ataqueString, 180, 250);
+                } else {
+                    g.setColor(Color.red);
+                    g.drawString(ataqueString, 180, 250);
+                }
+            } else {
+                if (ataqueString.length() < 10) {
+                    g.setColor(Color.green);
+                    g.drawString(ataqueString, 220, 250);
+                } else {
+                    g.setColor(Color.red);
+                    g.drawString(ataqueString, 180, 250);
+                }
             }
 
             if (ataqueString != "") {
@@ -520,12 +593,11 @@ public class Minimax {
 
         // player.remove(0);
         //playerInimigo.get(0).vida = 2;
-
         // player.remove(1);
         //player.get(0).vida = 2;
         //player.get(0).ataque = 5;
         player.get(2).ataque = 3;
-        playerInimigo.get(0).ataque = 0;
+        playerInimigo.get(1).ataque = 3;
 
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
@@ -560,9 +632,9 @@ public class Minimax {
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
         if (no.player.size() == 0) {
-            if (maximo < -no.altura) {
+            /*if (maximo < -no.altura) {
                 maximo = -no.altura;
-            }
+            }*/
             //System.out.println(no.altura);
             return no.heuristica;
         }
