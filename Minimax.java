@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
@@ -124,8 +123,8 @@ public class Minimax {
         boolean ataquePlayer = false;
         int ataquePlayerMaximo = 2000;
         int ataquePlayerTime = 0;
-        boolean vezMaquina = true;
-        boolean altomatico = false;
+        boolean vezMaquina = false;
+        boolean altomatico = true;
 
         public void ataqueMax(boolean inveter) throws CloneNotSupportedException {
             ArrayList<Personagem> auxPlayer;
@@ -333,14 +332,21 @@ public class Minimax {
             g.setStroke(new BasicStroke(3));
             g.setFont(fonteGrande);
 
-            if (ataquePlayerTime > ataquePlayerMaximo / 2 && altomatico == false && vezMaquina == true) {
-                ataquePlayer = !ataquePlayer;
-                vezMaquina = false;
-                try {
-                    teste();
-                } catch (CloneNotSupportedException ex) {
-                    Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+            if (ataquePlayerTime > ataquePlayerMaximo / 2 && vezMaquina == true) {
+                if(altomatico == false){
+                    ataquePlayer = !ataquePlayer;
+                    vezMaquina = false;
+                    try {
+                        teste();
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(Minimax.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+                 if(altomatico == true){
+                    ataquePlayer=!ataquePlayer;
+                    vezMaquina = false;
+                }
+                
                 ataquePlayerTime = 0;
             }
             ataquePlayerTime++;
