@@ -125,7 +125,7 @@ public class Minimax {
         boolean ataquePlayer = false;
         int ataquePlayerMaximo = 2000;
         int ataquePlayerTime = 0;
-        boolean vezMaquina = false;
+        boolean vezMaquina = true;
         boolean altomatico = false;
 
         public void ataqueMax(boolean inveter) throws CloneNotSupportedException {
@@ -603,13 +603,14 @@ public class Minimax {
         //playerInimigo.get(0).vida = 2;
         //player.remove(1);
         //player.get(0).vida = 2;
-        player.get(1).ataque = 11;
+        //player.get(1).ataque = 11;
         //player.get(2).ataque = 3;
         //player.get(0).vida = 1;
         //player.get(1).vida = 1;
-        player.get(2).vida = 9;
+        player.get(2).ataque = 3;
         playerInimigo.get(1).ataque = 3;
-        playerInimigo.get(2).ataque = 4;
+        //playerInimigo.get(1).ataque = 3;
+        //playerInimigo.get(2).ataque = 4;
 
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
@@ -729,9 +730,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
                     best = Math.max(best, novoFilho.valor);
                     alpha = Math.max(alpha, best);
-                    if (beta <= alpha) {
+                    /*if (beta <= alpha) {
                         break;
-                    }
+                    }*/
 
                 }
             }
@@ -781,9 +782,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
                     best = Math.min(best, novoFilho.valor);
                     beta = Math.min(beta, best);
-                    if (beta <= alpha) {
+                    /*if (beta <= alpha) {
                         break;
-                    }
+                    }*/
 
                 }
             }
