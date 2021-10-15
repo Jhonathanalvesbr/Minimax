@@ -601,13 +601,13 @@ public class Minimax {
         //playerInimigo.get(0).vida = 2;
         //player.remove(1);
         //player.get(0).vida = 2;
-        //player.get(1).ataque = 5;
+        player.get(1).ataque = 11;
         //player.get(2).ataque = 3;
         //player.get(0).vida = 1;
         //player.get(1).vida = 1;
-        //player.get(2).vida = 9;
-        //playerInimigo.get(1).ataque = 3;
-        //playerInimigo.get(1).ataque = 3;
+        player.get(2).vida = 9;
+        playerInimigo.get(1).ataque = 3;
+        playerInimigo.get(2).ataque = 4;
 
         for (Personagem p : player) {
             p.life.setMaximum(p.vida);
