@@ -40,6 +40,7 @@ public class Minimax {
         JProgressBar life = new JProgressBar(0, vida);
         int ataque = 1;
         int level = 1;
+        int exp = 0;
         int id = 0;
         int indice;
         int time = 150;
@@ -48,6 +49,7 @@ public class Minimax {
         int y = 0;
         String nome = new String();
         boolean isPlayer = false;
+
 
         @Override
         protected Personagem clone() throws CloneNotSupportedException {
@@ -641,7 +643,7 @@ public class Minimax {
     }
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
-        if(jogada == true && no.altura == 3){
+        /*if(jogada == true && no.altura == 3){
             no.heuristica = 0;
             for (Personagem player : no.playerInimigo) {
                 no.heuristica += player.ataque;
@@ -658,7 +660,7 @@ public class Minimax {
                 //no.heuristica += player.level;
             }
             return -(no.heuristica);
-        }
+        }*/
         
         if (no.player.size() == 0) {
             /*if (maximo < -no.altura) {
