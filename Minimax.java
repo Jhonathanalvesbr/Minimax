@@ -125,7 +125,7 @@ public class Minimax {
         boolean ataquePlayer = false;
         int ataquePlayerMaximo = 2000;
         int ataquePlayerTime = 0;
-        boolean vezMaquina = false;
+        boolean vezMaquina = true;
         boolean altomatico = false;
 
         public void ataqueMax(boolean inveter) throws CloneNotSupportedException {
@@ -608,7 +608,7 @@ public class Minimax {
         //player.get(2).ataque = 3;
         //player.get(0).vida = 1;
         //player.remove(0);
-        player.get(2).vida = 1;
+        //player.get(2).vida = 1;
         player.get(1).ataque = 3;
         playerInimigo.get(1).ataque = 3;
         //playerInimigo.get(1).ataque = 3;
