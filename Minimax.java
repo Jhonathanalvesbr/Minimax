@@ -739,9 +739,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
                     best = Math.max(best, novoFilho.valor);
                     alpha = Math.max(alpha, best);
-                    if (beta <= alpha) {
+                    /*if (beta <= alpha) {
                         break;
-                    }
+                    }*/
 
                 }
             }
@@ -791,9 +791,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
                     best = Math.min(best, novoFilho.valor);
                     beta = Math.min(beta, best);
-                    if (beta <= alpha) {
+                    /*if (beta <= alpha) {
                         break;
-                    }
+                    }*/
 
                 }
             }
