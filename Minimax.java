@@ -125,7 +125,7 @@ public class Minimax {
         boolean ataquePlayer = false;
         int ataquePlayerMaximo = 2000;
         int ataquePlayerTime = 0;
-        boolean vezMaquina = true;
+        boolean vezMaquina = false;
         boolean altomatico = false;
 
         public void ataqueMax(boolean inveter) throws CloneNotSupportedException {
@@ -145,7 +145,8 @@ public class Minimax {
             }*/
             maximo = Integer.MIN_VALUE;
             minimax(no, true, MIN, MAX);
-            System.out.println("Nos Gerados: " + tamanho);
+            System.out.println("Profundidade: " + maximo );
+            System.out.println("Nós gerados: " + tamanho);
             tamanho = 0;
             System.out.println("Quantidade de filhos: " + no.filho.size());
             //System.out.println("Minimo: " + maximo);
@@ -606,8 +607,9 @@ public class Minimax {
         //player.get(1).ataque = 11;
         //player.get(2).ataque = 3;
         //player.get(0).vida = 1;
-        //player.get(1).vida = 1;
-        player.get(2).ataque = 3;
+        player.remove(0);
+        //player.get(2).vida = 1;
+        player.get(1).ataque = 3;
         playerInimigo.get(1).ataque = 3;
         //playerInimigo.get(1).ataque = 3;
         //playerInimigo.get(2).ataque = 4;
@@ -644,44 +646,51 @@ public class Minimax {
     }
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
-        /*if(jogada == true && no.altura == 3){
+        /*if(jogada == true && no.altura == 4){
             no.heuristica = 0;
             for (Personagem player : no.playerInimigo) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
+            no.heuristica += no.playerInimigo.size();
             return no.heuristica;
         }
-        else if(jogada == false && no.altura == 3){
+        else if(jogada == false && no.altura == 4){
             no.heuristica = 0;
             for (Personagem player : no.player) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
+            no.heuristica += no.player.size();
             return -(no.heuristica);
         }*/
         
         if (no.player.size() == 0) {
-            /*if (maximo < -no.altura) {
-                maximo = -no.altura;
-            }*/
+            if (maximo < no.altura) {
+                maximo = no.altura;
+            }
             no.heuristica = 0;
             for (Personagem player : no.playerInimigo) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
+            no.heuristica += no.playerInimigo.size();
             return no.heuristica;
         }
         if (no.playerInimigo.size() == 0) {
+            if (maximo < no.altura) {
+                maximo = no.altura;
+            }
             no.heuristica = 0;
             for (Personagem player : no.player) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
+            no.heuristica += no.player.size();
             return -(no.heuristica);
         }
 
@@ -730,9 +739,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
                     best = Math.max(best, novoFilho.valor);
                     alpha = Math.max(alpha, best);
-                    /*if (beta <= alpha) {
+                    if (beta <= alpha) {
                         break;
-                    }*/
+                    }
 
                 }
             }
@@ -782,9 +791,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
                     best = Math.min(best, novoFilho.valor);
                     beta = Math.min(beta, best);
-                    /*if (beta <= alpha) {
+                    if (beta <= alpha) {
                         break;
-                    }*/
+                    }
 
                 }
             }
