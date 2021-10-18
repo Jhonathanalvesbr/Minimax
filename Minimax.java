@@ -607,8 +607,8 @@ public class Minimax {
         //player.get(1).ataque = 11;
         //player.get(2).ataque = 3;
         //player.get(0).vida = 1;
-        player.remove(0);
-        //player.get(2).vida = 1;
+        //player.remove(0);
+        player.get(2).vida = 1;
         player.get(1).ataque = 3;
         playerInimigo.get(1).ataque = 3;
         //playerInimigo.get(1).ataque = 3;
@@ -653,7 +653,7 @@ public class Minimax {
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.playerInimigo.size();
+            no.heuristica += no.playerInimigo.size() + no.altura;
             return no.heuristica;
         }
         else if(jogada == false && no.altura == 4){
@@ -661,7 +661,7 @@ public class Minimax {
             for (Personagem player : no.player) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
-                //no.heuristica += player.level;
+                //no.heuristica += player.level + no.altura;
             }
             no.heuristica += no.player.size();
             return -(no.heuristica);
@@ -677,7 +677,7 @@ public class Minimax {
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.playerInimigo.size();
+            no.heuristica += no.playerInimigo.size() + no.altura;
             return no.heuristica;
         }
         if (no.playerInimigo.size() == 0) {
@@ -690,7 +690,7 @@ public class Minimax {
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.player.size();
+            no.heuristica += no.player.size() + no.altura;
             return -(no.heuristica);
         }
 
