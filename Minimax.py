@@ -1,6 +1,7 @@
 from Personagem import Personagem
 from No import No
 import math
+import copy
 
 playerInimigo = []
 player = []
@@ -9,9 +10,11 @@ no = []
 for i in range(3):
     aux = Personagem()
     aux.id = i
+    aux.vida = 1
     playerInimigo.append(aux)
     aux = Personagem()
     aux.id = i
+    aux.vida = 1
     player.append(aux)
 
 def heuristica(personagem):
@@ -19,59 +22,96 @@ def heuristica(personagem):
     for k in personagem:
         heuris += k.ataque
         heuris += k.vida
-    return heuris
-
+    return heuris+len(personagem)
+a = 0
 def minimax(no, jogada, alpha, beta):
+    global a
+    a += 1
     if len(no.player) == 0:
-        return heuristica(no.playerInimigo)
+        return no.altura
 
     if len(no.playerInimigo) == 0:
         return -heuristica(no.player)
 
-    if jogada == True:
-        best = -math.inf
-        for p in no.playerInimigo:
-            for i in no.player:
-                if i.vida > 0:
-                    i.vida -= p.ataque
-                    novoFilho = no.add_child()                 
-                    i.vida += p.ataque
-
-                    novoFilho.valor = -math.inf
-                    no.valor = -math.inf
+    if (jogada):
+            best = -math.inf
+            i = 0
+            while i < len(no.playerInimigo):
+                j = 0
+                while j < len(no.player):
+                    novoFilho = no.add_child()
                     
-                    novoFilho.valor = no.valor = max(no.valor, minimax(novoFilho, False, alpha, beta))
+                    k = 0
+                    while k < len(no.player):
+                        aux = copy.deepcopy(no.player[k])
+                        novoFilho.player.append(aux)
+                        k += 1
+                    k = 0
+                    while k < len(no.playerInimigo):
+                        aux = copy.deepcopy(no.playerInimigo[k])
+                        novoFilho.playerInimigo.append(aux)
+                        k += 1
+
+                    novoFilho.player[j].vida -= no.playerInimigo[i].ataque
+                    if (novoFilho.player[j].vida <= 0):
+                        novoFilho.player.remove(j)
+
+                    novoFilho.valor = no.valor = -math.inf
+
+                    novoFilho.valor = no.valor = max(no.valor, minimax(novoFilho, false, alpha, beta))
                     best = max(best, novoFilho.valor)
                     alpha = max(alpha, best)
+                    j += 1
                     if (beta <= alpha):
                         break
-        return best
+                i += 1
+            return best
     else:
-        print(2)
-        best = math.inf
-        for i in no.player:
-            for p in no.playerInimigo:
-                if p.vida > 0:
-                    i.vida -= p.ataque
-                    novoFilho = no.add_child()                 
-                    i.vida += p.ataque
+            best = math.inf;
+            i = 0
+            while i < len(no.player):
+                j = 0
+                while j < len(no.playerInimigo):
+                    novoFilho = no.add_child()
 
-                    novoFilho.valor = math.inf
-                    no.valor = math.inf
+                    k = 0
+                    while k < len(no.player):
+                        aux = copy.deepcopy(no.player.get(k))
+                        novoFilho.player.append(aux)
+                        k += 1
+                    k = 0
+                    while k < len(no.playerInimigo):
+                        aux = copy.deepcopy(no.playerInimigo.get(k))
+                        novoFilho.playerInimigo.append(aux)
+                        k += 1
 
-                    novoFilho.valor = no.valor = min(no.valor, minimax(novoFilho, True, alpha, beta))
+                    novoFilho.playerInimigo[j].vida -= no.player.get[i].ataque
+                    if (novoFilho.playerInimigo.get[j].vida <= 0):
+                        novoFilho.playerInimigo.remove(j)
+                    
+                    novoFilho.valor = no.valor = math.inf
+
+                    novoFilho.valor = no.valor = min(no.valor, minimax(novoFilho, true, alpha, beta))
                     best = min(best, novoFilho.valor)
                     beta = min(beta, best)
+                    j += 1
                     if (beta <= alpha):
                         break
-        return best
+                i += 1
 
+                
+            
+            return best;
+        
+
+
+player[1].ataque = 3
+playerInimigo[1].ataque = 3
+        
 no = No(None, player, playerInimigo,0)
 
+x  = 0
 print(minimax(no, True, -math.inf, math.inf))
 for k in no.filho:
-    print(k.valor)
-print("====================================")
-for k in no.filho[0].filho:
-    print(k.valor)
-
+    print(str(x) + " : " + str(k.valor))
+    x+=1

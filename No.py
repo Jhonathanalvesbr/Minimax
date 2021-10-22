@@ -8,21 +8,18 @@ class No:
         self.playerInimigo = playerInimigo
         self.altura = altura
         self.filho = []
+        self.heuristica = 0
+        self.id = []
+        valor = 0
 
-    heuristica = 0
-    id = 0
-    valor = 0
-
-    def remover(self,personagem):
+    def removerMorre(self,personagem):
         for k in personagem:
-            if(k.vida == 0):
+            if(k.vida <= 0):
                 personagem.remove(k)
         return personagem
 
     def add_child(self):
-        child = No(self, self.remover(copy.deepcopy(self.player)), self.remover(copy.deepcopy(self.playerInimigo)), self.altura)
+        child = No(self, self.removerMorre(copy.deepcopy(self.player)), self.removerMorre(copy.deepcopy(self.playerInimigo)), self.altura)
         child.altura += 1
         self.filho.append(child)
-        if(len(self.filho) >= 15):
-            exit()
         return child
