@@ -19,7 +19,9 @@ class No:
         return personagem
 
     def add_child(self):
-        child = No(self, self.removerMorre(copy.deepcopy(self.player)), self.removerMorre(copy.deepcopy(self.playerInimigo)), self.altura)
+        child = No(self, [], [], self.altura)
         child.altura += 1
+        child.player = self.removerMorre(copy.deepcopy(self.player))
+        child.playerInimigo = self.removerMorre(copy.deepcopy(self.playerInimigo))
         self.filho.append(child)
         return child

@@ -677,7 +677,7 @@ public class Minimax {
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.playerInimigo.size() + no.altura;
+            no.heuristica += no.playerInimigo.size() ;
             return no.heuristica;
         }
         if (no.playerInimigo.size() == 0) {
@@ -690,7 +690,7 @@ public class Minimax {
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.player.size() + no.altura;
+            no.heuristica += no.player.size() ;
             return -(no.heuristica);
         }
 
@@ -739,9 +739,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.max(no.valor, minimax(novoFilho, false, alpha, beta));
                     best = Math.max(best, novoFilho.valor);
                     alpha = Math.max(alpha, best);
-                    /*if (beta <= alpha) {
+                    if (beta <= alpha) {
                         break;
-                    }*/
+                    }
 
                 }
             }
@@ -791,9 +791,9 @@ public class Minimax {
                     novoFilho.valor = no.valor = Math.min(no.valor, minimax(novoFilho, true, alpha, beta));
                     best = Math.min(best, novoFilho.valor);
                     beta = Math.min(beta, best);
-                    /*if (beta <= alpha) {
+                    if (beta <= alpha) {
                         break;
-                    }*/
+                    }
 
                 }
             }
