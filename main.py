@@ -89,7 +89,26 @@ def minimax(player, playerInimigo):
     Minimax.minimax(no, True, -math.inf, math.inf)
     return no
 
-player[1].ataque = 3
+def deletar(d, player):
+    for k in player:
+        if(k == d):
+            for i in todas_as_sprites:
+                if(i == k.sprite):
+                    todas_as_sprites.remove(i)
+                    player.remove(k)
+            break
+
+d = player[0]
+deletar(d, player)
+d = player[0]
+deletar(d, player)
+player[0].vida = 3
+#playerInimigo[2].ataque = 3
+
+for k in player:
+    k.sprite.vidaTotal = k.vida
+for k in playerInimigo:
+    k.sprite.vidaTotal = k.vida
 
 while run:
     for event in pygame.event.get():
