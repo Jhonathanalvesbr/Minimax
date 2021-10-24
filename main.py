@@ -89,21 +89,30 @@ def minimax(player, playerInimigo):
     Minimax.minimax(no, True, -math.inf, math.inf)
     return no
 
-def deletar(d, player):
+def deletar(d):
+    global player
+    global playerInimigo
     for k in player:
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
                     todas_as_sprites.remove(i)
                     player.remove(k)
-            break
+            return
+    for k in playerInimigo:
+        if(k == d):
+            for i in todas_as_sprites:
+                if(i == k.sprite):
+                    todas_as_sprites.remove(i)
+                    player.remove(k)
+            return
 
 d = player[0]
-deletar(d, player)
+deletar(d)
 d = player[0]
-deletar(d, player)
+deletar(d)
 player[0].vida = 3
-#playerInimigo[2].ataque = 3
+playerInimigo[2].ataque = 3
 
 for k in player:
     k.sprite.vidaTotal = k.vida
