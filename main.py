@@ -4,6 +4,9 @@ import os
 import random
 from Personagem import Personagem
 import time
+import Minimax
+from No import No
+import math
 
 class personagemDisponiveis():
     def __init__(self, nome, caminho):
@@ -65,6 +68,28 @@ fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
 
+def minimax(player, playerInimigo):
+    p = []
+    i = []
+
+    for k in player:
+        aux = Personagem()
+        aux.ataque = k.ataque
+        aux.vida = k.vida
+        aux.nome = k.nome
+        p.append(aux)
+    for k in playerInimigo:
+        aux = Personagem()
+        aux.ataque = k.ataque
+        aux.vida = k.vida
+        aux.nome = k.nome
+        i.append(aux)
+    
+    no = No(None, p, i, 0)
+    Minimax.minimax(no, True, -math.inf, math.inf)
+    return no
+
+player[1].ataque = 3
 
 while run:
     for event in pygame.event.get():
@@ -73,7 +98,10 @@ while run:
 
     for k in player:
         if(k.vida <= 0):
-            player.remove(k)
+            for i in todas_as_sprites:
+                if(i == k.sprite):
+                    todas_as_sprites.remove(i)
+                    player.remove(k)
             break
     for k in playerInimigo:
         if(k.vida <= 0):
@@ -104,12 +132,25 @@ while run:
                     elif(len(selecaoAtaque) > 1):
                         for k in playerInimigo:
                             if(k == selecaoAtaque[1]):
-                                elecaoAtaque[1] = p
+                                selecaoAtaque[1] = p
                                 break
             if(len(selecaoAtaque) >= 2):
                 selecaoAtaque[1].vida -= selecaoAtaque[0].ataque
-                print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
+                #print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
                 selecaoAtaque = []
+                no = minimax(player, playerInimigo)
+                joagada = None
+                valor = -math.inf
+                for k in no.filho:
+                    if(valor < k.valor):
+                        valor = k.valor
+                        jogada = k
+                for p in player:
+                    if(p.nome == jogada.id[1].nome):
+                        p.vida -= jogada.id[0].ataque
+                        break
+
+                
 
         timeClick = time.time()
 

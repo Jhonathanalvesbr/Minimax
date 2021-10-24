@@ -64,17 +64,3 @@ def minimax(no, jogada, alpha, beta):
                         break
         return best
         
-
-
-player[1].ataque = 3
-
-playerInimigo[1].ataque = 3
-        
-no = No(None, player, playerInimigo,0)
-
-x  = 0
-print(minimax(no, True, -math.inf, math.inf))
-for k in no.filho:
-    print(str(x) + " : " + str(k.valor))
-    x+=1
-

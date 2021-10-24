@@ -1,13 +1,12 @@
 import pygame
-
-
+import os
 
 class sprite(pygame.sprite.Sprite):
     jogador = True
-    spriteVida = pygame.image.load("C:\\Users\\jhona\\Desktop\\Minimax\\Minimax\\pacote\\barra\\Loading Bar Background.png")
+    spriteVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Background.png")
     spriteVida = pygame.transform.scale(spriteVida,(int(80),int(20)))
     posicaoVida = spriteVida.get_rect(midleft=(90, 20))
-    spriteCaregar = pygame.image.load("C:\\Users\\jhona\\Desktop\\Minimax\\Minimax\\pacote\\barra\\Loading Bar Green.png")
+    spriteCaregar = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Green.png")
     spriteCaregar = pygame.transform.scale(spriteCaregar,(int(80),int(20)))
     posicaoCarregar = spriteCaregar.get_rect(midleft=(90, 20))
     
@@ -32,11 +31,14 @@ class sprite(pygame.sprite.Sprite):
             self.image =  pygame.transform.flip(self.image , 1, 0)
             self.posicaoVida = self.spriteVida.get_rect(midleft=(self.rect.x-80, self.rect.y))
             cem = (74 * self.personagem.vida) / self.vidaTotal
-
+            if(cem <= 0):
+                cem = 1
             self.spriteCaregar = pygame.transform.scale(self.spriteCaregar,(int(cem),int(20)))
             self.posicaoCarregar = self.spriteCaregar.get_rect(midleft=(self.rect.x-77, self.rect.y))
         else:
             cem = (74 * self.personagem.vida) / self.vidaTotal
+            if(cem <= 0):
+                cem = 1
             self.posicaoVida = self.spriteVida.get_rect(midleft=(self.rect.x+100, self.rect.y))
             self.spriteCaregar = pygame.transform.scale(self.spriteCaregar,(int(cem),int(20)))
             self.posicaoCarregar = self.spriteCaregar.get_rect(midleft=(self.rect.x+103, self.rect.y))
