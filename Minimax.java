@@ -646,14 +646,14 @@ public class Minimax {
     }
 
     public static int minimax(No no, boolean jogada, int alpha, int beta) throws CloneNotSupportedException {
-        /*if(jogada == true && no.altura == 4){
+        if(jogada == true && no.altura == 4){
             no.heuristica = 0;
             for (Personagem player : no.playerInimigo) {
                 no.heuristica += player.ataque;
                 no.heuristica += player.vida;
                 //no.heuristica += player.level;
             }
-            no.heuristica += no.playerInimigo.size() + no.altura;
+            no.heuristica += no.playerInimigo.size();
             return no.heuristica;
         }
         else if(jogada == false && no.altura == 4){
@@ -665,7 +665,7 @@ public class Minimax {
             }
             no.heuristica += no.player.size();
             return -(no.heuristica);
-        }*/
+        }
         
         if (no.player.size() == 0) {
             if (maximo < no.altura) {

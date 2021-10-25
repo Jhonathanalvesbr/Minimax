@@ -23,8 +23,15 @@ def heuristica(personagem):
         heuris += k.ataque
         heuris += k.vida
     return heuris+len(personagem)
-
+a = 0
 def minimax(no, jogada, alpha, beta): 
+    global a
+    a+= 1
+    '''if(jogada == True and no.altura == 4):
+        return heuristica(no.playerInimigo)
+    elif(jogada == False and no.altura == 4):
+        return -heuristica(no.player)
+    '''
     if len(no.player) == 0:
         return heuristica(no.playerInimigo)
 
@@ -63,4 +70,16 @@ def minimax(no, jogada, alpha, beta):
                 if (beta <= alpha):
                         break
         return best
+'''
+playerInimigo[1].ataque = 3
+player[1].ataque = 3
+
+no = No(None, player, playerInimigo, 0)
+minimax(no, True, -math.inf, math.inf)
         
+x = 0
+for k in no.filho:
+    print(str(x) +  " | " + str(k.valor))
+    x+=1
+print(a)
+'''

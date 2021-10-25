@@ -5,7 +5,7 @@ class Personagem:
         self.vida = 2
         self.ataque = 1
         self.level = 1
-        self.velocidade = 3
+        self.velocidade = 1
         self.sprite = sprite()
         self.nome = ""
 

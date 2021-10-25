@@ -43,7 +43,7 @@ class sprite(pygame.sprite.Sprite):
             self.spriteCaregar = pygame.transform.scale(self.spriteCaregar,(int(cem),int(20)))
             self.posicaoCarregar = self.spriteCaregar.get_rect(midleft=(self.rect.x+103, self.rect.y))
 
-        
+        #self.image = pygame.transform.scale(self.image,(int(120),int(120)))
 
         janela.blit(self.spriteVida,self.posicaoVida)
         janela.blit(self.spriteCaregar,self.posicaoCarregar)

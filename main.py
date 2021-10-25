@@ -84,9 +84,10 @@ def minimax(player, playerInimigo):
         aux.vida = k.vida
         aux.nome = k.nome
         i.append(aux)
-    
     no = No(None, p, i, 0)
     Minimax.minimax(no, True, -math.inf, math.inf)
+    for k in no.filho:
+        print(k.valor)
     return no
 
 def deletar(d):
@@ -103,41 +104,36 @@ def deletar(d):
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
+                    for j in playerInimigo:
+                        j.velocidade -= 1
                     todas_as_sprites.remove(i)
-                    player.remove(k)
+                    playerInimigo.remove(k)
             return
 
-d = player[0]
-deletar(d)
-d = player[0]
-deletar(d)
-player[0].vida = 3
-playerInimigo[2].ataque = 3
+#d = player[0]
+#deletar(d)
+#d = player[0]
+#deletar(d)
+player[1].vida = 2
+playerInimigo[1].ataque = 3
 
+x = 0
 for k in player:
     k.sprite.vidaTotal = k.vida
+    k.velocidade = x
+    x += 1
+x = 0
 for k in playerInimigo:
     k.sprite.vidaTotal = k.vida
+    k.velocidade = x
+    x += 1
+
+
 
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-    for k in player:
-        if(k.vida <= 0):
-            for i in todas_as_sprites:
-                if(i == k.sprite):
-                    todas_as_sprites.remove(i)
-                    player.remove(k)
-            break
-    for k in playerInimigo:
-        if(k.vida <= 0):
-            for i in todas_as_sprites:
-                if(i == k.sprite):
-                    todas_as_sprites.remove(i)
-                    playerInimigo.remove(k)
-            break
 
     timeRun = time.time()
 
@@ -164,9 +160,26 @@ while run:
                                 break
             if(len(selecaoAtaque) >= 2):
                 selecaoAtaque[1].vida -= selecaoAtaque[0].ataque
-                #print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
+                print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
+                for k in playerInimigo:
+                    if(k.vida <= 0):
+                        deletar(k)
+                
+
+                for k in player:
+                    print(k.nome)
+                
                 selecaoAtaque = []
-                no = minimax(player, playerInimigo)
+                x = 0
+                play = []
+                for k in playerInimigo:
+                    if(k.velocidade <= 0):
+                        k.velocidade  = len(playerInimigo)-1
+                        play.append(k)
+                    else:
+                        k.velocidade -= 1
+                    print("Velocidade: " + str(k.velocidade))
+                no = minimax(player, play)
                 joagada = None
                 valor = -math.inf
                 for k in no.filho:
@@ -177,7 +190,16 @@ while run:
                     if(p.nome == jogada.id[1].nome):
                         p.vida -= jogada.id[0].ataque
                         break
+                        
+                
+                print(jogada.id[1].nome + " <- " + jogada.id[0].nome)
 
+                for k in player:
+                    if(k.vida <= 0):
+                        deletar(k)
+                
+                
+                
                 
 
         timeClick = time.time()
