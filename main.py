@@ -24,7 +24,7 @@ def criaPlayer(sprites, inferior, superior):
     return player
 
 def criarPersonagens():
-    caminhoPersonagens = os.getcwd()+'\\img'
+    caminhoPersonagens = os.getcwd()+'\\castelo'
     personagem = []
     for k in os.listdir(caminhoPersonagens):
         personagem.append(personagemDisponiveis(k,caminhoPersonagens+"\\"+k))
@@ -97,21 +97,17 @@ def deletar(d):
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
-                    for j in player:
-                        j.velocidade -= 1
-                        j.sprite.velocidadeTotal = len(player)-1
                     todas_as_sprites.remove(i)
                     player.remove(k)
+                    break
             return
     for k in playerInimigo:
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
-                    for j in playerInimigo:
-                        j.velocidade -= 1
-                        j.sprite.velocidadeTotal = len(playerInimigo)-1
                     todas_as_sprites.remove(i)
                     playerInimigo.remove(k)
+                    break
             return
 
 #d = player[0]
@@ -124,24 +120,40 @@ playerInimigo[1].ataque = 3
 x = 0
 for k in player:
     k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = len(player)-1
+    k.sprite.velocidadeTotal = 10
     k.velocidade = x
     x += 1
 x = 0
 for k in playerInimigo:
     k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = len(playerInimigo)-1
+    k.sprite.velocidadeTotal = 10
     k.velocidade = x
     x += 1
 
-
-
+texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama.jpg")
+texturaGrama = pygame.transform.scale(texturaGrama,(int(600),int(600)))
+posicaoTexturaGrama = texturaGrama.get_rect(midleft=(0, +300))
+timeVelocidade = time.time()
 while run:
+    janela.blit(texturaGrama,posicaoTexturaGrama)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
     timeRun = time.time()
+
+    if(timeRun-timeVelocidade > 1):
+        for j in playerInimigo:
+            if(j.velocidade <= 0):
+                j.velocidade  = 10
+            else:
+                j.velocidade -= 1
+        for j in player:
+            if(j.velocidade <= 0):
+                j.velocidade = 10
+            else:
+                j.velocidade -= 1
+        timeVelocidade = time.time()
 
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
@@ -177,7 +189,7 @@ while run:
                 
                 selecaoAtaque = []
                 x = 0
-                play = []
+                '''play = []
                 for k in playerInimigo:
                     if(k.velocidade <= 0):
                         k.velocidade  = len(playerInimigo)-1
@@ -185,7 +197,9 @@ while run:
                     else:
                         k.velocidade -= 1
                     print("Velocidade: " + str(k.velocidade))
-                no = minimax(player, play)
+                '''
+                no = minimax(player, playerInimigo)
+            
                 joagada = None
                 valor = -math.inf
                 for k in no.filho:
@@ -215,7 +229,7 @@ while run:
     
     todas_as_sprites.draw(janela)
     todas_as_sprites.update(janela)
-    
+    '''
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 700), (800, 700), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 600), (800, 600), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 500), (800, 500), 1)
@@ -232,7 +246,7 @@ while run:
     pygame.draw.line(janela, pygame.Color(255,255,255), (500, 0), (500, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (600, 0), (600, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (700, 0), (700, 800), 1)
-
+    '''
     pygame.display.update()
     janela.fill((0,0,0))
     fpsClock.tick(FPS)

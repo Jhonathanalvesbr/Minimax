@@ -81,7 +81,7 @@ class sprite(pygame.sprite.Sprite):
             self.spriteCaregarVida = pygame.transform.scale(self.spriteCaregarVida,(int(cemVida),int(20)))
             self.posicaoCarregar = self.spriteCaregarVida.get_rect(midleft=(self.rect.x+103, self.rect.y))
 
-        #self.image = pygame.transform.scale(self.image,(int(120),int(120)))
+        self.image = pygame.transform.scale(self.image,(int(120),int(120)))
 
         janela.blit(self.spriteVida,self.posicaoVida)
         janela.blit(self.spriteCaregarVelocidade,self.posicaoCarregarVelocidade)
