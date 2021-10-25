@@ -97,6 +97,9 @@ def deletar(d):
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
+                    for j in player:
+                        j.velocidade -= 1
+                        j.sprite.velocidadeTotal = len(player)-1
                     todas_as_sprites.remove(i)
                     player.remove(k)
             return
@@ -106,6 +109,7 @@ def deletar(d):
                 if(i == k.sprite):
                     for j in playerInimigo:
                         j.velocidade -= 1
+                        j.sprite.velocidadeTotal = len(playerInimigo)-1
                     todas_as_sprites.remove(i)
                     playerInimigo.remove(k)
             return
@@ -114,17 +118,19 @@ def deletar(d):
 #deletar(d)
 #d = player[0]
 #deletar(d)
-player[1].vida = 2
+player[1].ataque = 3
 playerInimigo[1].ataque = 3
 
 x = 0
 for k in player:
     k.sprite.vidaTotal = k.vida
+    k.sprite.velocidadeTotal = len(player)-1
     k.velocidade = x
     x += 1
 x = 0
 for k in playerInimigo:
     k.sprite.vidaTotal = k.vida
+    k.sprite.velocidadeTotal = len(playerInimigo)-1
     k.velocidade = x
     x += 1
 

@@ -19,3 +19,4 @@ class Personagem:
         self.sprite.rect.topleft = 100,100
         self.sprite.personagem = self
         self.sprite.vidaTotal = self.vida
+        self.sprite.velocidadeTotal = self.velocidade
