@@ -7,6 +7,8 @@ import time
 import Minimax
 from No import No
 import math
+import AStar
+import PersonagemAStar
 
 class personagemDisponiveis():
     def __init__(self, nome, caminho):
@@ -68,6 +70,19 @@ fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
 
+def getCaminho(personagem,pernosagemAtual,pernosagemAlvo):
+    movimento = []
+    
+    x = int(personagem.rect.x/passo)
+    y = int(personagem.rect.y/passo)
+    caminho[y][x] = pernosagemAtual
+    movimento = busca.busca(caminho,[y,x],pernosagemAlvo,x,y,personagem)
+    if(movimento == None):
+        return None
+    #print(movimento)
+    caminho[y][x] = 0
+    return movimento
+
 def minimax(player, playerInimigo):
     p = []
     i = []
@@ -117,14 +132,20 @@ def deletar(d):
 player[1].ataque = 3
 playerInimigo[1].ataque = 3
 
+y = 2
 x = 0
 for k in player:
+    k.id = y
+    y += 1
     k.sprite.vidaTotal = k.vida
     k.sprite.velocidadeTotal = 10
     k.velocidade = x
     x += 1
 x = 0
+y = -2
 for k in playerInimigo:
+    k.id = y
+    y -= 1
     k.sprite.vidaTotal = k.vida
     k.sprite.velocidadeTotal = 10
     k.velocidade = x
@@ -134,11 +155,52 @@ texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama.jpg")
 texturaGrama = pygame.transform.scale(texturaGrama,(int(600),int(600)))
 posicaoTexturaGrama = texturaGrama.get_rect(midleft=(0, +300))
 timeVelocidade = time.time()
+passo = 25
+tamanho = int(600/passo)
+busca = AStar.Astar(tamanho)
+caminho = []
+for y in range(tamanho):
+    linha = []
+    for x in range(tamanho):
+        linha.append(0)
+    caminho.append(linha)
+
+soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
+soldado = PersonagemAStar.Personagem()
+soldado.sprite(soldadoSprite)
+soldado.id = 2
+todas_as_sprites.add(soldado)
+
+for k in caminho:
+    for i in player:
+        y = int(i.sprite.rect.y/passo)
+        x = int(i.sprite.rect.x/passo)
+        for j in range(y,y+5):
+            for z in range(x,x+5):
+                caminho[j][z] = i.id
+    for i in playerInimigo:
+        y = int(i.sprite.rect.y/passo)
+        x = int(i.sprite.rect.x/passo)
+        for j in range(y,y+5):
+            for z in range(x,x+5):
+                caminho[j][z] = i.id
+
+
+for x in range(len(caminho)):
+    for y in range(len(caminho)):
+        print(caminho[x][y], end="")
+    print()
+
+
 while run:
     janela.blit(texturaGrama,posicaoTexturaGrama)
+
     for event in pygame.event.get():
+        teclado = pygame.key.get_pressed()
         if event.type == pygame.QUIT:
             run = False
+        if(teclado[pygame.K_F5]):
+            temp = getCaminho(soldado,1,-3)
 
     timeRun = time.time()
 
@@ -158,6 +220,7 @@ while run:
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
         if(timeRun-timeClick > 0.5):
+            print(str(ponto[0]/passo) + " : " + str(ponto[1]/passo))
             for p in player:
                 if(p.sprite.rect.collidepoint(ponto)):
                     if(len(selecaoAtaque) == 0):
@@ -229,7 +292,7 @@ while run:
     
     todas_as_sprites.draw(janela)
     todas_as_sprites.update(janela)
-    '''
+    
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 700), (800, 700), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 600), (800, 600), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 500), (800, 500), 1)
@@ -246,7 +309,7 @@ while run:
     pygame.draw.line(janela, pygame.Color(255,255,255), (500, 0), (500, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (600, 0), (600, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (700, 0), (700, 800), 1)
-    '''
+    
     pygame.display.update()
     janela.fill((0,0,0))
     fpsClock.tick(FPS)
