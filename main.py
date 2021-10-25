@@ -70,12 +70,64 @@ fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
 
-def getCaminho(personagem,pernosagemAtual,pernosagemAlvo):
+def mover(personagem, movimento):
+    if(personagem.fim-personagem.ini  > personagem.velocidade and len(movimento) > 0):
+        if(personagem.id != -1):
+            if(personagem.rect.x < movimento[0][0]*passo):
+                personagem.angle = 0
+            if(personagem.rect.x > movimento[0][0]*passo):
+                personagem.angle = 180
+            if(personagem.rect.y > movimento[0][1]*passo):
+                personagem.angle = -90
+            if(personagem.rect.y > movimento[0][1]*passo):
+                personagem.angle = 90
+        elif(personagem.id == -1 and personagem.seguir == True):
+            if(personagem.rect.x < movimento[0][0]*passo):
+                personagem.angle = 0
+                personagem.image = personagem.sprites[2]
+            if(personagem.rect.x > movimento[0][0]*passo):
+                personagem.angle = 0
+                personagem.image = personagem.sprites[1]
+            if(personagem.rect.y > movimento[0][1]*passo):
+                personagem.angle = 0
+                personagem.image = personagem.sprites[4]
+            if(personagem.rect.y > movimento[0][1]*passo):
+                personagem.angle = 0
+                personagem.image = personagem.sprites[3]
+
+            
+        #print(personagem.movimento)
+        personagem.ini = time.time()
+        personagem.rect.x = movimento[0][0]*passo
+        personagem.rect.y =  movimento[0][1]*passo
+        p = []
+        p.append(personagem.rect.x)
+        p.append(personagem.rect.y)
+        movimento.pop(0)
+
+def findXY(pernosagemAlvo):
+    global caminho
+    for x in range(len(caminho)):
+        for y in range(len(caminho)):
+            if(caminho[x][y] == pernosagemAlvo):
+                return [x,y]
+
+def getCaminho(personagem,pernosagemAlvo):
     movimento = []
     
     x = int(personagem.rect.x/passo)
     y = int(personagem.rect.y/passo)
-    caminho[y][x] = pernosagemAtual
+    caminho[y][x] = personagem.id
+
+   
+    xy = findXY(pernosagemAlvo)
+
+    caminho[xy[0]][xy[1]] = pernosagemAlvo
+    personagem.desX = xy[0]
+    personagem.desY = xy[1]
+
+    #imprimirCaminho()
+
     movimento = busca.busca(caminho,[y,x],pernosagemAlvo,x,y,personagem)
     if(movimento == None):
         return None
@@ -132,7 +184,7 @@ def deletar(d):
 player[1].ataque = 3
 playerInimigo[1].ataque = 3
 
-y = 2
+y = 10
 x = 0
 for k in player:
     k.id = y
@@ -142,7 +194,7 @@ for k in player:
     k.velocidade = x
     x += 1
 x = 0
-y = -2
+y = -10
 for k in playerInimigo:
     k.id = y
     y -= 1
@@ -168,28 +220,29 @@ for y in range(tamanho):
 soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
 soldado = PersonagemAStar.Personagem()
 soldado.sprite(soldadoSprite)
-soldado.id = 2
+soldado.id = 30
 todas_as_sprites.add(soldado)
 
 for k in caminho:
     for i in player:
         y = int(i.sprite.rect.y/passo)
         x = int(i.sprite.rect.x/passo)
-        for j in range(y,y+5):
-            for z in range(x,x+5):
+        for j in range(y,y+4):
+            for z in range(x,x+4):
                 caminho[j][z] = i.id
     for i in playerInimigo:
         y = int(i.sprite.rect.y/passo)
         x = int(i.sprite.rect.x/passo)
-        for j in range(y,y+5):
-            for z in range(x,x+5):
+        for j in range(y,y+4):
+            for z in range(x,x+4):
                 caminho[j][z] = i.id
 
-
-for x in range(len(caminho)):
-    for y in range(len(caminho)):
-        print(caminho[x][y], end="")
-    print()
+def imprimirCaminho():
+    global caminho
+    for x in range(len(caminho)):
+        for y in range(len(caminho)):
+            print(caminho[x][y], end="")
+        print()
 
 
 while run:
@@ -200,8 +253,13 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if(teclado[pygame.K_F5]):
-            temp = getCaminho(soldado,1,-3)
-
+            mov = getCaminho(soldado,-12)
+            soldado.ini = time.time()
+            soldado.movimento = mov
+    soldado.fim = time.time()
+    if(len(soldado.movimento) > 1):
+        mover(soldado,soldado.movimento)
+    
     timeRun = time.time()
 
     if(timeRun-timeVelocidade > 1):
@@ -220,7 +278,7 @@ while run:
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
         if(timeRun-timeClick > 0.5):
-            print(str(ponto[0]/passo) + " : " + str(ponto[1]/passo))
+            #print(str(ponto[0]/passo) + " : " + str(ponto[1]/passo))
             for p in player:
                 if(p.sprite.rect.collidepoint(ponto)):
                     if(len(selecaoAtaque) == 0):

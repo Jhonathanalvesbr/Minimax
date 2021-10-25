@@ -54,8 +54,8 @@ def custoH(x, y, desX, desY):
     #return -1
     #return abs(min(dx,dy))
     #return g #Profundidade
-    return abs(x-desX) + abs(y-desY) #Manhattan
-    #return math.sqrt(pow((x - desX), 2.0)+pow((y - desY), 2.0)) #Euclidiana
+    #return abs(x-desX) + abs(y-desY) #Manhattan
+    return math.sqrt(pow((x - desX), 2.0)+pow((y - desY), 2.0)) #Euclidiana
     #return 0
 
 def criaEstado(self, iniX, iniY):
@@ -226,54 +226,13 @@ class Astar():
         caminho = c[:]
         iniX = posicaoPersonagemXY[0]
         iniY = posicaoPersonagemXY[1]
-        if(iniX == personagem.desX and iniY == personagem.desY):
-            personagem.desX = None
-        xx = self.buscaIndices(posicaoX,personagem.tamanho)
-        yy = self.buscaIndices(posicaoY,personagem.tamanho)
-    
-        e = 0
-
-        for x in range(xx[0],xx[1]):
-            for y in range(yy[0],yy[1]):
-                #print(caminho[x][y], end="")
-                if(caminho[x][y] == target):
-                    personagem.desX = x
-                    personagem.desY = y
-                    e = 1
-                    personagem.find = 1
-                    break
-
-
-            #print("")
         
-        if(e == 0 and personagem.caminhar == True and personagem.desX == None):
-            personagem.find = -1
-            xTemp = random.randint(xx[0],xx[1])
-            yTemp = random.randint(yy[0],yy[1])
-            if(xTemp == self.tamanho):
-                xTemp -= 1
-            if(yTemp == self.tamanho):
-                yTemp -= 1
-
-            personagem.desX = xTemp
-            personagem.desY = yTemp
-
-        if(personagem.caminhar == True):
-            caminho[personagem.desX][personagem.desY] = -2
-            target  = -2
-
-
-        #print(personagem.desX)
-        #print(personagem.desY)
-        #print("============")
-        if(personagem.desX == None):
-            return None
         
         listaAberta = []
         listaFechada = []
         self.caminho = caminho
         listaAberta.append(Estado.Estado(iniX, iniY))
-
+        
         while(len(listaAberta) > 0):
             pai = listaAberta[0]
             listaFechada.append(pai)
