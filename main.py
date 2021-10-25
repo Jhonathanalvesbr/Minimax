@@ -239,8 +239,8 @@ for k in caminho:
 
 def encosta(personagem,encosta):
     p = []
-    p.append(personagem.rect.x)
-    p.append(personagem.rect.y)
+    p.append(personagem.rect.x+5)
+    p.append(personagem.rect.y+5)
     for k in encosta:
         if(k.sprite.rect.collidepoint(p)):
             print("---")
@@ -262,7 +262,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if(teclado[pygame.K_F5]):
-            mov = getCaminho(soldado,-12)
+            mov = getCaminho(soldado,-11)
             soldado.ini = time.time()
             soldado.movimento = mov
     soldado.fim = time.time()
