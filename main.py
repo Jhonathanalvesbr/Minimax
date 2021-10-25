@@ -229,13 +229,22 @@ for k in caminho:
         x = int(i.sprite.rect.x/passo)
         for j in range(y,y+4):
             for z in range(x,x+4):
-                caminho[j][z] = i.id
+                caminho[j+2][z+1] = i.id
     for i in playerInimigo:
         y = int(i.sprite.rect.y/passo)
         x = int(i.sprite.rect.x/passo)
         for j in range(y,y+4):
             for z in range(x,x+4):
-                caminho[j][z] = i.id
+                caminho[j+3][z+1] = i.id
+
+def encosta(personagem,encosta):
+    p = []
+    p.append(personagem.rect.x)
+    p.append(personagem.rect.y)
+    for k in encosta:
+        if(k.sprite.rect.collidepoint(p)):
+            print("---")
+    personagem = None
 
 def imprimirCaminho():
     global caminho
@@ -259,6 +268,8 @@ while run:
     soldado.fim = time.time()
     if(len(soldado.movimento) > 1):
         mover(soldado,soldado.movimento)
+    if(len(soldado.movimento) <= 1):
+        encosta(soldado,playerInimigo) 
     
     timeRun = time.time()
 
