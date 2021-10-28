@@ -12,9 +12,9 @@ class Personagem(pygame.sprite.Sprite):
         self.image = self.sprites[self.atual]
         self.angle = 0
         self.rect = self.image.get_rect()
-        self.rect.topleft = 100,100
-        self.rect[2] = 100
-        self.rect[3] = 100
+        self.rect.topleft = 50,50
+        self.rect[2] = 50
+        self.rect[3] = 50
         self.seguir = False
         self.mover = 0 
         self.movimento = []
@@ -56,16 +56,16 @@ class Personagem(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image , 1, 0)
         if(self.id == 1 and self.caminhar == True):
             self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
+            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
             self.image = pygame.transform.rotate(self.image,self.angle)
             return
         if(self.id == -1 and self.seguir == False):
             self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
+            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
             self.image = pygame.transform.rotate(self.image,self.angle)
         elif(self.id == -1 and self.find == 1):
             self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
+            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
             self.image = pygame.transform.rotate(self.image,self.angle)
         
         elif(self.id != -1):
@@ -74,10 +74,10 @@ class Personagem(pygame.sprite.Sprite):
                 self.atual = 0
             
             self.image = self.sprites[int(self.atual)]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
+            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
             self.image = pygame.transform.rotate(self.image,self.angle)
         else:
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
+            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
             return
         
     def angulo(self,angle):
