@@ -71,6 +71,8 @@ fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
 
+soldado = []
+
 def mover(personagem, movimento):
     if(personagem.fim-personagem.ini  > personagem.velocidade and len(movimento) > 0):
         if(personagem.id != -1):
@@ -95,7 +97,6 @@ def mover(personagem, movimento):
             if(personagem.rect.y > movimento[0][1]*passo):
                 personagem.angle = 0
                 personagem.image = personagem.sprites[3]
-
             
         #print(personagem.movimento)
         personagem.ini = time.time()
@@ -113,12 +114,12 @@ def findXY(pernosagemAlvo):
             if(caminho[x][y] == pernosagemAlvo):
                 return [x,y]
 
-def getCaminho(personagem,pernosagemAlvo):
+'''def getCaminho(personagem,pernosagemAlvo):
     movimento = []
     
     x = int(personagem.rect.x/passo)
     y = int(personagem.rect.y/passo)
-    caminho[y][x] = personagem.id
+    #caminho[y][x] = personagem.id
 
    
     xy = findXY(pernosagemAlvo)
@@ -130,11 +131,61 @@ def getCaminho(personagem,pernosagemAlvo):
     #imprimirCaminho()
 
     movimento = busca.busca(caminho,[y,x],pernosagemAlvo,x,y,personagem)
+
+    if(movimento == None):
+        return None
+    #print(movimento)
+    #caminho[y][x] = 0
+    return movimento
+'''
+
+def getCaminho(personagem,pernosagemAlvo):
+    movimento = []
+    
+    x = int(personagem.rect.x/passo)
+    y = int(personagem.rect.y/passo)
+    caminho[y][x] = personagem.id
+
+    xy = [int((pernosagemAlvo.sprite.rect[0]+(passo*2))/passo),int((pernosagemAlvo.sprite.rect[1]+(passo*2))/passo)]
+    
+    caminho[xy[1]][xy[0]] = pernosagemAlvo.id
+    personagem.desX = xy[1]
+    personagem.desY = xy[0]
+
+    #imprimirCaminho()
+
+    movimento = busca.busca(caminho,[y,x],pernosagemAlvo.id,x,y,personagem)
     if(movimento == None):
         return None
     #print(movimento)
     caminho[y][x] = 0
+    caminho[xy[1]][xy[0]] = 0
     return movimento
+
+
+def getCaminhoSoldado(personagem,pernosagemAlvo):
+    movimento = []
+    
+    x = int(personagem.rect.x/passo)
+    y = int(personagem.rect.y/passo)
+    caminho[y][x] = personagem.id
+
+    xy = [int(pernosagemAlvo.rect.x/passo),int(pernosagemAlvo.rect.y/passo)]
+    
+    caminho[xy[0]][xy[1]] = pernosagemAlvo.id
+    personagem.desX = xy[0]
+    personagem.desY = xy[1]
+
+    #imprimirCaminho()
+
+    movimento = busca.busca(caminho,[y,x],pernosagemAlvo.id,x,y,personagem)
+    if(movimento == None):
+        return None
+    #print(movimento)
+    caminho[xy[0]][xy[1]] = 0
+    caminho[y][x] = 0
+    return movimento
+
 
 def minimax(player, playerInimigo):
     p = []
@@ -162,6 +213,15 @@ def minimax(player, playerInimigo):
 def deletar(d):
     global player
     global playerInimigo
+    global soldado
+    
+    for k in soldado:
+        if(k == d):
+            for i in todas_as_sprites:
+                if(i == k):
+                    todas_as_sprites.remove(i)
+                    soldado.remove(k)
+                
     for k in player:
         if(k == d):
             for i in todas_as_sprites:
@@ -223,7 +283,7 @@ for y in range(tamanho):
 #soldado.personagem = player[0]
 #soldado.id = 30
 #todas_as_sprites.add(soldado)
-
+'''
 for k in caminho:
     for i in player:
         y = int(i.sprite.rect.y/passo)
@@ -237,14 +297,24 @@ for k in caminho:
         for j in range(y,y+4):
             for z in range(x,x+4):
                 caminho[j+3][z+1] = i.id
+'''
+def encosta(personagem):
+    global player
+    global playerInimigo
+    global soldado
 
-def encosta(personagem,encosta):
+
     p = []
-    p.append(personagem.rect.x+5)
-    p.append(personagem.rect.y+100)
-    for k in encosta:
+    p.append(personagem.rect.x)
+    p.append(personagem.rect.y)
+    for k in player:
         if(k.sprite.rect.collidepoint(p)):
             k.vida -= personagem.personagem.ataque
+            return
+    for k in playerInimigo:
+        if(k.sprite.rect.collidepoint(p)):
+            k.vida -= personagem.personagem.ataque
+            return
 
 
 def imprimirCaminho():
@@ -264,8 +334,25 @@ def verificaVidaCastelo():
     for k in playerInimigo:
         if(k.vida <= 0):
             deletar(k)
+    for k in soldado:
+        if(k.vida <= 0):
+            deletar(k)
 
+def procuraSoldado():
+    global soldado
+    for k in soldado:
+        for s in soldado:
+            if(k != s and k.jogador != s.jogador):
+                if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) <= 3 and
+                   abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) >= -3):
+                        k.movimento = getCaminhoSoldado(k,s)
+                if(k.rect.collidepoint([s.rect.x,s.rect.y]) == 1):
+                    k.vida -= s.ataque
+                    s.vida -= k.ataque
+                   
 
+#deletar(playerInimigo[1])
+#deletar(playerInimigo[1])
 
 while run:
     janela.blit(texturaGrama,posicaoTexturaGrama)
@@ -278,21 +365,17 @@ while run:
         #    mov = getCaminho(soldado,-12)
         #    soldado.ini = time.time()
         #    soldado.movimento = mov
+    
+    for k in soldado:
+        k.x = k.rect.x/passo
+        k.y = k.rect.x/passo
+        k.fim = time.time()
+        if(len(k.movimento) > 0):
+            mover(k,k.movimento)
 
-    for k in playerInimigo:
-        for i in k.personagemAStar:
-            i.fim = time.time()
-            if(len(i.movimento) > 1):
-                mover(i,i.movimento)
-            if(len(i.movimento) <= 1):
-                encosta(i,player)
-    for k in player:
-        for i in k.personagemAStar:
-            i.fim = time.time()
-            if(len(i.movimento) > 1):
-                mover(i,i.movimento)
-            if(len(i.movimento) <= 1):
-                encosta(i,playerInimigo)
+        encosta(k)
+    
+    
     
     #soldado.fim = time.time()
     #if(len(soldado.movimento) > 1):
@@ -300,13 +383,14 @@ while run:
     #if(len(soldado.movimento) <= 1):
     #    encosta(soldado,playerInimigo)
     verificaVidaCastelo()
-
+    
     timeRun = time.time()
 
     if(timeRun-timeVelocidade > 1):
+        procuraSoldado()
         for j in playerInimigo:
             if(j.velocidade <= 0):
-                j.velocidade  = k.level*velocidade
+                j.velocidade  = j.level*velocidade
                 auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")] 
                 aux = PersonagemAStar.Personagem()
                 aux.sprite(auxSoldadoSprite)
@@ -333,7 +417,7 @@ while run:
                 aux.spriteVida = pygame.transform.smoothscale( aux.spriteVida, (int(25), int(5)) )
                 aux.spriteRed = pygame.transform.smoothscale( aux.spriteRed, (int(25), int(5)) )
                 aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
-        
+                soldado.append(aux)
                 j.personagemAStar.append(aux)
                 no = minimax(player, playerInimigo)
                 joagada = None
@@ -342,13 +426,23 @@ while run:
                     if(valor < k.valor):
                         valor = k.valor
                         jogada = k
+                '''
                 nome = jogada.id[1].nome
                 mov = []
                 for k in player:
                     if(k.nome == nome):
-                        mov = getCaminho(aux,k.id)
+                        aux.find.append(k.id)
+                        mov = getCaminho(aux,aux.find[0])
+                        exit()
                         break
-                
+                '''
+                nome = jogada.id[1].nome
+                mov = []
+                for k in player:
+                    if(k.nome == nome):
+                        aux.find.append(k)
+                        mov = getCaminho(aux,k)
+                        break
                 
                 aux.ini = time.time()
                 aux.movimento = mov
@@ -359,8 +453,8 @@ while run:
             if(j.velocidade > 0):
                 j.velocidade -= 1
         timeVelocidade = time.time()
-
     
+        
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
         if(timeRun-timeClick > 0.5):
@@ -413,16 +507,24 @@ while run:
                 aux.spriteVida = pygame.transform.smoothscale( aux.spriteVida, (int(25), int(5)) )
                 aux.spriteRed = pygame.transform.smoothscale( aux.spriteRed, (int(25), int(5)) )
                 aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
-        
+                soldado.append(aux)
                 selecaoAtaque[0].personagemAStar.append(aux)
-
+                '''
                 nome = selecaoAtaque[1].nome
                 mov = []
                 for k in playerInimigo:
                     if(k.nome == nome):
-                        mov = getCaminho(aux,k.id)
+                        aux.find.append(k.id)
+                        mov = getCaminho(aux,aux.find[0])
                         break
-                
+                '''
+                nome = selecaoAtaque[1].nome
+                mov = []
+                for k in playerInimigo:
+                    if(k.nome == nome):
+                        aux.find.append(k)
+                        mov = getCaminho(aux,k)
+                        break
                 
                 aux.ini = time.time()
                 aux.movimento = mov

@@ -13,6 +13,8 @@ class Personagem(pygame.sprite.Sprite):
         self.angle = 0
         self.rect = self.image.get_rect()
         self.rect.topleft = 100,100
+        self.rect[2] = 100
+        self.rect[3] = 100
         self.seguir = False
         self.mover = 0 
         self.movimento = []
@@ -22,7 +24,9 @@ class Personagem(pygame.sprite.Sprite):
         self.desX = None
         self.desY = None
         self.id = 0
-        self.find = -1
+        self.find = []
+        self.x = None
+        self.y = None
         self.jogador = None
         self.spriteVida = None
         self.posicaoVida = None

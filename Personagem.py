@@ -18,6 +18,8 @@ class Personagem:
         self.sprite.angle = 0
         self.sprite.rect = self.sprite.image.get_rect()
         self.sprite.rect.topleft = 100,100
+        self.sprite.rect[2] = 100
+        self.sprite.rect[3] = 100
         self.sprite.personagem = self
         self.sprite.vidaTotal = self.vida
         self.sprite.velocidadeTotal = self.velocidade

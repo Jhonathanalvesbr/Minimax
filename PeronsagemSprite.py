@@ -30,6 +30,8 @@ class sprite(pygame.sprite.Sprite):
         self.angle = 0
         self.rect = self.image.get_rect()
         self.rect.topleft = 100,100
+        self.rect[2] = 100
+        self.rect[3] = 100
         self.nome = ""
         self.personagem = None
         self.vidaTotal = 0
