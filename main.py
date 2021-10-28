@@ -274,10 +274,10 @@ while run:
         teclado = pygame.key.get_pressed()
         if event.type == pygame.QUIT:
             run = False
-        if(teclado[pygame.K_F5]):
-            mov = getCaminho(soldado,-12)
-            soldado.ini = time.time()
-            soldado.movimento = mov
+       # if(teclado[pygame.K_F5]):
+        #    mov = getCaminho(soldado,-12)
+        #    soldado.ini = time.time()
+        #    soldado.movimento = mov
 
     for k in playerInimigo:
         for i in k.personagemAStar:
@@ -286,6 +286,13 @@ while run:
                 mover(i,i.movimento)
             if(len(i.movimento) <= 1):
                 encosta(i,player)
+    for k in player:
+        for i in k.personagemAStar:
+            i.fim = time.time()
+            if(len(i.movimento) > 1):
+                mover(i,i.movimento)
+            if(len(i.movimento) <= 1):
+                encosta(i,playerInimigo)
     
     #soldado.fim = time.time()
     #if(len(soldado.movimento) > 1):
@@ -349,13 +356,11 @@ while run:
             else:
                 j.velocidade -= 1
         for j in player:
-            if(j.velocidade <= 0):
-                j.velocidade = j.level*(velocidade/2)
-            else:
+            if(j.velocidade > 0):
                 j.velocidade -= 1
         timeVelocidade = time.time()
 
-    '''
+    
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
         if(timeRun-timeClick > 0.5):
@@ -378,11 +383,63 @@ while run:
                             if(k == selecaoAtaque[1]):
                                 selecaoAtaque[1] = p
                                 break
-            if(len(selecaoAtaque) >= 2):
-                selecaoAtaque[1].vida -= selecaoAtaque[0].ataque
+
+    if(len(selecaoAtaque) >= 2):
+        if(selecaoAtaque[0].velocidade == 0):
+
+                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")] 
+                aux = PersonagemAStar.Personagem()
+                aux.sprite(auxSoldadoSprite)
+                aux.personagem = j
+                aux.id = selecaoAtaque[0].id*3
+                aux.jogador = selecaoAtaque[0].sprite.jogador
+                aux.ataque = selecaoAtaque[0].ataque
+                aux.vida = selecaoAtaque[0].vida
+                aux.rect = copy.deepcopy(selecaoAtaque[0].sprite.rect)
+                aux.rect.x = ((selecaoAtaque[0].sprite.rect.x/passo)+4)*passo
+                aux.rect.y = ((selecaoAtaque[0].sprite.rect.y/passo)+3)*passo
+
+                aux.spriteVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Background.png")
+                aux.spriteVida = pygame.transform.scale(aux.spriteVida,(int(80),int(20)))
+                aux.posicaoVida = aux.spriteVida.get_rect(midleft=(80, 20))
+
+                aux.spriteCaregarVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Green.png")
+                aux.spriteCaregarVida = pygame.transform.scale(aux.spriteCaregarVida,(int(78),int(20)))
+                aux.posicaoCarregar = aux.spriteCaregarVida.get_rect(midleft=(80, 20))
+
+                aux.spriteRed = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Barra_Vermelho.png")
+                aux.spriteRed = pygame.transform.scale(aux.spriteRed,(int(78),int(20)))
+                aux.posicaoRed = aux.spriteRed.get_rect(midleft=(80, 20))
+                aux.spriteVida = pygame.transform.smoothscale( aux.spriteVida, (int(25), int(5)) )
+                aux.spriteRed = pygame.transform.smoothscale( aux.spriteRed, (int(25), int(5)) )
+                aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
+        
+                selecaoAtaque[0].personagemAStar.append(aux)
+
+                nome = selecaoAtaque[1].nome
+                mov = []
+                for k in playerInimigo:
+                    if(k.nome == nome):
+                        mov = getCaminho(aux,k.id)
+                        break
+                
+                
+                aux.ini = time.time()
+                aux.movimento = mov
+                
+                todas_as_sprites.add(aux)
+
+
+
+
+                
+                selecaoAtaque[0].velocidade = k.level*(velocidade/2)
                 print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
+                selecaoAtaque = []
+   
+    
                 
-                
+                '''
 
                 for k in player:
                     print(k.nome)
