@@ -9,13 +9,14 @@ from No import No
 import math
 import AStar
 import PersonagemAStar
+import copy
 
 class personagemDisponiveis():
-    def __init__(self, nome, caminho):
-        self.nome = nome
-        self.sprite = []
+    def __init__(aux, nome, caminho):
+        aux.nome = nome
+        aux.sprite = []
         for k in os.listdir(caminho):
-            self.sprite.append(pygame.image.load(caminho+"\\"+k))
+            aux.sprite.append(pygame.image.load(caminho+"\\"+k))
             
 def criaPlayer(sprites, inferior, superior):
     player = []
@@ -52,7 +53,7 @@ playerInimigo[1].sprite.rect.y = player[0].sprite.rect.y+190
 playerInimigo[2].sprite.rect.x = 480
 playerInimigo[2].sprite.rect.y = player[1].sprite.rect.y+190
 todas_as_sprites = pygame.sprite.Group()
-
+velocidade = 20
 
 for k in player:
     todas_as_sprites.add(k.sprite)
@@ -153,8 +154,9 @@ def minimax(player, playerInimigo):
         i.append(aux)
     no = No(None, p, i, 0)
     Minimax.minimax(no, True, -math.inf, math.inf)
-    for k in no.filho:
+    '''for k in no.filho:
         print(k.valor)
+    '''
     return no
 
 def deletar(d):
@@ -166,16 +168,14 @@ def deletar(d):
                 if(i == k.sprite):
                     todas_as_sprites.remove(i)
                     player.remove(k)
-                    break
-            return
+                    return
     for k in playerInimigo:
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
                     todas_as_sprites.remove(i)
                     playerInimigo.remove(k)
-                    break
-            return
+                    return
 
 #d = player[0]
 #deletar(d)
@@ -190,7 +190,7 @@ for k in player:
     k.id = y
     y += 1
     k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = 10
+    k.sprite.velocidadeTotal = k.level*(velocidade/2)
     k.velocidade = x
     x += 1
 x = 0
@@ -199,7 +199,7 @@ for k in playerInimigo:
     k.id = y
     y -= 1
     k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = 10
+    k.sprite.velocidadeTotal = k.level*velocidade
     k.velocidade = x
     x += 1
 
@@ -217,11 +217,12 @@ for y in range(tamanho):
         linha.append(0)
     caminho.append(linha)
 
-soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
-soldado = PersonagemAStar.Personagem()
-soldado.sprite(soldadoSprite)
-soldado.id = 30
-todas_as_sprites.add(soldado)
+#soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
+#soldado = PersonagemAStar.Personagem()
+#soldado.sprite(soldadoSprite)
+#soldado.personagem = player[0]
+#soldado.id = 30
+#todas_as_sprites.add(soldado)
 
 for k in caminho:
     for i in player:
@@ -240,11 +241,11 @@ for k in caminho:
 def encosta(personagem,encosta):
     p = []
     p.append(personagem.rect.x+5)
-    p.append(personagem.rect.y+5)
+    p.append(personagem.rect.y+100)
     for k in encosta:
         if(k.sprite.rect.collidepoint(p)):
-            print("---")
-    personagem = None
+            k.vida -= personagem.personagem.ataque
+
 
 def imprimirCaminho():
     global caminho
@@ -252,6 +253,18 @@ def imprimirCaminho():
         for y in range(len(caminho)):
             print(caminho[x][y], end="")
         print()
+
+def verificaVidaCastelo():
+    global player
+    global playerInimigo
+    
+    for k in player:
+        if(k.vida <= 0):
+            deletar(k)
+    for k in playerInimigo:
+        if(k.vida <= 0):
+            deletar(k)
+
 
 
 while run:
@@ -262,30 +275,87 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if(teclado[pygame.K_F5]):
-            mov = getCaminho(soldado,-11)
+            mov = getCaminho(soldado,-12)
             soldado.ini = time.time()
             soldado.movimento = mov
-    soldado.fim = time.time()
-    if(len(soldado.movimento) > 1):
-        mover(soldado,soldado.movimento)
-    if(len(soldado.movimento) <= 1):
-        encosta(soldado,playerInimigo) 
+
+    for k in playerInimigo:
+        for i in k.personagemAStar:
+            i.fim = time.time()
+            if(len(i.movimento) > 1):
+                mover(i,i.movimento)
+            if(len(i.movimento) <= 1):
+                encosta(i,player)
     
+    #soldado.fim = time.time()
+    #if(len(soldado.movimento) > 1):
+    #    mover(soldado,soldado.movimento)
+    #if(len(soldado.movimento) <= 1):
+    #    encosta(soldado,playerInimigo)
+    verificaVidaCastelo()
+
     timeRun = time.time()
 
     if(timeRun-timeVelocidade > 1):
         for j in playerInimigo:
             if(j.velocidade <= 0):
-                j.velocidade  = 10
+                j.velocidade  = k.level*velocidade
+                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")] 
+                aux = PersonagemAStar.Personagem()
+                aux.sprite(auxSoldadoSprite)
+                aux.personagem = j
+                aux.id = j.id*3
+                aux.jogador = j.sprite.jogador
+                aux.ataque = j.ataque
+                aux.vida = j.vida
+                aux.rect = copy.deepcopy(j.sprite.rect)
+                aux.rect.x = ((j.sprite.rect.x/passo)-1)*passo
+                aux.rect.y = ((j.sprite.rect.y/passo)-1)*passo
+
+                aux.spriteVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Background.png")
+                aux.spriteVida = pygame.transform.scale(aux.spriteVida,(int(80),int(20)))
+                aux.posicaoVida = aux.spriteVida.get_rect(midleft=(80, 20))
+
+                aux.spriteCaregarVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Green.png")
+                aux.spriteCaregarVida = pygame.transform.scale(aux.spriteCaregarVida,(int(78),int(20)))
+                aux.posicaoCarregar = aux.spriteCaregarVida.get_rect(midleft=(80, 20))
+
+                aux.spriteRed = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Barra_Vermelho.png")
+                aux.spriteRed = pygame.transform.scale(aux.spriteRed,(int(78),int(20)))
+                aux.posicaoRed = aux.spriteRed.get_rect(midleft=(80, 20))
+                aux.spriteVida = pygame.transform.smoothscale( aux.spriteVida, (int(25), int(5)) )
+                aux.spriteRed = pygame.transform.smoothscale( aux.spriteRed, (int(25), int(5)) )
+                aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
+        
+                j.personagemAStar.append(aux)
+                no = minimax(player, playerInimigo)
+                joagada = None
+                valor = -math.inf
+                for k in no.filho:
+                    if(valor < k.valor):
+                        valor = k.valor
+                        jogada = k
+                nome = jogada.id[1].nome
+                mov = []
+                for k in player:
+                    if(k.nome == nome):
+                        mov = getCaminho(aux,k.id)
+                        break
+                
+                
+                aux.ini = time.time()
+                aux.movimento = mov
+                todas_as_sprites.add(aux)
             else:
                 j.velocidade -= 1
         for j in player:
             if(j.velocidade <= 0):
-                j.velocidade = 10
+                j.velocidade = j.level*(velocidade/2)
             else:
                 j.velocidade -= 1
         timeVelocidade = time.time()
 
+    '''
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
         if(timeRun-timeClick > 0.5):
@@ -311,9 +381,7 @@ while run:
             if(len(selecaoAtaque) >= 2):
                 selecaoAtaque[1].vida -= selecaoAtaque[0].ataque
                 print(selecaoAtaque[0].nome + " -> " + selecaoAtaque[1].nome)
-                for k in playerInimigo:
-                    if(k.vida <= 0):
-                        deletar(k)
+                
                 
 
                 for k in player:
@@ -321,7 +389,7 @@ while run:
                 
                 selecaoAtaque = []
                 x = 0
-                '''play = []
+                play = []
                 for k in playerInimigo:
                     if(k.velocidade <= 0):
                         k.velocidade  = len(playerInimigo)-1
@@ -329,7 +397,7 @@ while run:
                     else:
                         k.velocidade -= 1
                     print("Velocidade: " + str(k.velocidade))
-                '''
+                
                 no = minimax(player, playerInimigo)
             
                 joagada = None
@@ -350,18 +418,18 @@ while run:
                     if(k.vida <= 0):
                         deletar(k)
                 
-                
+
                 
                 
 
         timeClick = time.time()
 
-
+        '''
 
     
     todas_as_sprites.draw(janela)
     todas_as_sprites.update(janela)
-    
+    '''
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 700), (800, 700), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 600), (800, 600), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (0, 500), (800, 500), 1)
@@ -378,7 +446,7 @@ while run:
     pygame.draw.line(janela, pygame.Color(255,255,255), (500, 0), (500, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (600, 0), (600, 800), 1)
     pygame.draw.line(janela, pygame.Color(255,255,255), (700, 0), (700, 800), 1)
-    
+    '''
     pygame.display.update()
     janela.fill((0,0,0))
     fpsClock.tick(FPS)

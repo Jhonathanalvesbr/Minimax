@@ -22,7 +22,6 @@ class sprite(pygame.sprite.Sprite):
     spriteCaregarVelocidade = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Background.png")
     spriteCaregarVelocidade = pygame.transform.scale(spriteCaregarVelocidade,(int(80),int(20)))
     posicaoCarregarVelocidade = spriteCaregarVelocidade.get_rect(midleft=(90, 20))
-    
 
     def updateSprite(self,sprite):
         self.sprites = sprite
@@ -83,10 +82,12 @@ class sprite(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image,(int(120),int(120)))
 
-        janela.blit(self.spriteVida,self.posicaoVida)
+        
         janela.blit(self.spriteCaregarVelocidade,self.posicaoCarregarVelocidade)
+        janela.blit(self.spriteVida,self.posicaoVida)
         janela.blit(self.spriteRed,self.posicaoRed)
-        janela.blit(self.spriteAzul,self.posicaoAzul)
         janela.blit(self.spriteCaregarVida,self.posicaoCarregar)
+        janela.blit(self.spriteAzul,self.posicaoAzul)
+        
         
 

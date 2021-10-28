@@ -1,9 +1,11 @@
 import pygame
-
-
+from Personagem import Personagem
+import copy
 
 class Personagem(pygame.sprite.Sprite):
+
     def sprite(self, sprite):
+        self.personagem = None
         self.tamanhoTela = 600
         self.sprites = sprite
         self.atual = 0
@@ -21,12 +23,33 @@ class Personagem(pygame.sprite.Sprite):
         self.desY = None
         self.id = 0
         self.find = -1
+        self.jogador = None
+        self.spriteVida = None
+        self.posicaoVida = None
+        self.spriteCaregarVida = None
+        self.posicaoCarregar = None
+        self.spriteRed = None
+        self.posicaoRed = None
+        
         
         for i in range(len(self.sprites)):
             self.image = self.sprites[i]
             self.image = pygame.transform.rotate(self.image,200)
             
     def update(self, janela):
+        self.posicaoVida = copy.deepcopy(self.rect)
+        self.posicaoRed = copy.deepcopy(self.rect)
+        self.posicaoCarregar = copy.deepcopy(self.rect)
+        self.posicaoCarregar.x += 1
+        self.posicaoRed.x += 1
+        
+        janela.blit(self.spriteVida,self.posicaoVida)
+        janela.blit(self.spriteRed,self.posicaoRed)
+        janela.blit(self.spriteCaregarVida,self.posicaoCarregar)
+        
+        if(self.jogador == False):
+            self.angle = -180
+            self.image = pygame.transform.flip(self.image , 1, 0)
         if(self.id == 1 and self.caminhar == True):
             self.image = self.sprites[0]
             self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/10)*1,int(self.tamanhoTela/10)*1))
@@ -57,13 +80,13 @@ class Personagem(pygame.sprite.Sprite):
         self.angle = angle
 
     def cima(self, passo):
-        self.rect.move_ip(0,-passo)
-
-    def baixo(self,passo):
         self.rect.move_ip(0,passo)
 
+    def baixo(self,passo):
+        self.rect.move_ip(0,-passo)
+
     def esquerda(self,passo):
-        self.rect.move_ip(-passo,0)
+        self.rect.move_ip(passo,0)
 
     def direita(self,passo):
-        self.rect.move_ip(passo,0)
+        self.rect.move_ip(*-passo,0)

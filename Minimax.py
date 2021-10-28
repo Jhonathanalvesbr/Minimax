@@ -27,11 +27,11 @@ a = 0
 def minimax(no, jogada, alpha, beta): 
     global a
     a+= 1
-    '''if(jogada == True and no.altura == 4):
+    if(jogada == True and no.altura == 4):
         return heuristica(no.playerInimigo)
     elif(jogada == False and no.altura == 4):
         return -heuristica(no.player)
-    '''
+    
     if len(no.player) == 0:
         return heuristica(no.playerInimigo)
 

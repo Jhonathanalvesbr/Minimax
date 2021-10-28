@@ -8,6 +8,7 @@ class Personagem:
         self.velocidade = 1
         self.sprite = sprite()
         self.nome = ""
+        self.personagemAStar = []
 
     def updateSprite(self, sprite, nome):
         self.nome = nome
