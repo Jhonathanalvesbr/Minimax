@@ -75,7 +75,7 @@ soldado = []
 
 def mover(personagem, movimento):
     if(personagem.fim-personagem.ini  > personagem.velocidade and len(movimento) > 0):
-        if(personagem.id != -1):
+        if(personagem.jogador != -1):
             if(personagem.rect.x < movimento[0][0]*passo):
                 personagem.angle = 0
             if(personagem.rect.x > movimento[0][0]*passo):
@@ -179,8 +179,7 @@ def getCaminhoSoldado(personagem,pernosagemAlvo):
     #imprimirCaminho()
 
     movimento = busca.busca(caminho,[y,x],pernosagemAlvo.id,x,y,personagem)
-    if(movimento == None):
-        return None
+
     #print(movimento)
     caminho[xy[0]][xy[1]] = 0
     caminho[y][x] = 0
@@ -324,7 +323,7 @@ def imprimirCaminho():
             print(caminho[x][y], end="")
         print()
 
-def verificaVidaCastelo():
+def verificaVida():
     global player
     global playerInimigo
     
@@ -366,14 +365,7 @@ while run:
         #    soldado.ini = time.time()
         #    soldado.movimento = mov
     
-    for k in soldado:
-        k.x = k.rect.x/passo
-        k.y = k.rect.x/passo
-        k.fim = time.time()
-        if(len(k.movimento) > 0):
-            mover(k,k.movimento)
-
-        encosta(k)
+    
     
     
     
@@ -382,7 +374,7 @@ while run:
     #    mover(soldado,soldado.movimento)
     #if(len(soldado.movimento) <= 1):
     #    encosta(soldado,playerInimigo)
-    verificaVidaCastelo()
+    
     
     timeRun = time.time()
 
@@ -481,7 +473,7 @@ while run:
     if(len(selecaoAtaque) >= 2):
         if(selecaoAtaque[0].velocidade == 0):
 
-                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")] 
+                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\2.png")] 
                 aux = PersonagemAStar.Personagem()
                 aux.sprite(auxSoldadoSprite)
                 aux.personagem = j
@@ -585,6 +577,15 @@ while run:
 
         '''
 
+    for k in soldado:
+        k.x = k.rect.x/passo
+        k.y = k.rect.x/passo
+        k.fim = time.time()
+        if(len(k.movimento) > 0):
+            mover(k,k.movimento)
+
+        encosta(k)
+    verificaVida()
     
     todas_as_sprites.draw(janela)
     todas_as_sprites.update(janela)
