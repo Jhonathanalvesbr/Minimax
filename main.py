@@ -262,7 +262,7 @@ for k in playerInimigo:
     k.velocidade = x
     x += 1
 
-texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama.jpg")
+texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama4.jpg")
 texturaGrama = pygame.transform.scale(texturaGrama,(int(600),int(600)))
 posicaoTexturaGrama = texturaGrama.get_rect(midleft=(0, +300))
 timeVelocidade = time.time()
@@ -344,10 +344,12 @@ def procuraSoldado():
             if(k != s and k.jogador != s.jogador):
                 if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) <= 3 and
                    abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) >= -3):
-                        k.movimento = getCaminhoSoldado(k,s)
-                if(k.rect.collidepoint([s.rect.x,s.rect.y]) == 1):
-                    k.vida -= s.ataque
-                    s.vida -= k.ataque
+                    if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) > 1 and
+                       abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) < -1):
+                            k.movimento = getCaminhoSoldado(k,s)
+                    if(k.rect.collidepoint([s.rect.x,s.rect.y]) == 1):
+                        k.vida -= s.ataque
+                        s.vida -= k.ataque
                    
 
 #deletar(playerInimigo[1])
