@@ -83,9 +83,10 @@ soldado = []
 #d = player[0]
 #deletar(d)
 player[1].ataque = 3
+#player[2].vida = 0.5
 #player[2].vida = 10
-playerInimigo[2].vida = 2
-playerInimigo[1].ataque = 3
+#playerInimigo[2].vida = 2
+#playerInimigo[1].ataque = 3
 
 y = 10
 x = 0
