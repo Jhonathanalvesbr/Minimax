@@ -10,6 +10,8 @@ import math
 import AStar
 import PersonagemAStar
 import copy
+import pygame.mixer 
+
 
 class personagemDisponiveis():
     def __init__(aux, nome, caminho):
@@ -241,6 +243,8 @@ def deletar(d):
 #d = player[0]
 #deletar(d)
 player[1].ataque = 3
+player[0].vida = 10
+playerInimigo[0].vida = 10
 playerInimigo[1].ataque = 3
 
 y = 10
@@ -297,22 +301,34 @@ for k in caminho:
             for z in range(x,x+4):
                 caminho[j+3][z+1] = i.id
 '''
+
+def batalha():
+    if(pygame.mixer.Channel(0).get_sound() != musicaBatalha):
+        musicaBatalha.play()
+    return
+
 def encosta(personagem):
     global player
     global playerInimigo
-    global soldado
+    global timeRun
 
+    if(timeRun-personagem.fim < 1):
+        return
+    else:
+        personagem.fim = time.time()
 
     p = []
     p.append(personagem.rect.x)
     p.append(personagem.rect.y)
     for k in player:
         if(k.sprite.rect.collidepoint(p)):
-            k.vida -= personagem.personagem.ataque
+            k.vida -= personagem.ataque
+            batalha()
             return
     for k in playerInimigo:
         if(k.sprite.rect.collidepoint(p)):
-            k.vida -= personagem.personagem.ataque
+            batalha()
+            k.vida -= personagem.ataque
             return
 
 
@@ -343,18 +359,28 @@ def procuraSoldado():
         for s in soldado:
             if(k != s and k.jogador != s.jogador):
                 if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) <= 3 and
-                   abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) >= -3):
-                    if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) > 1 and
-                       abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) < -1):
-                            k.movimento = getCaminhoSoldado(k,s)
-                    if(k.rect.collidepoint([s.rect.x,s.rect.y]) == 1):
-                        k.vida -= s.ataque
-                        s.vida -= k.ataque
+                abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) >= -3 and k.caminhar == False):
+                    batalha()
+                    k.caminhar = True
+                    k.movimento = getCaminhoSoldado(k,s)
+                if(k.rect.colliderect(s.rect)):
+                    k.caminhar = True
+                    k.vida -= s.ataque
+                    s.vida -= k.ataque
+                else:
+                    k.caminhar = False
                    
 
 #deletar(playerInimigo[1])
 #deletar(playerInimigo[1])
+timeRun = 0
 
+musicaTema = pygame.mixer.music.load(os.getcwd()+"\\pacote\\mp3\\tema.mp3")
+musicaSelecaoPlayer = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\player.mp3")
+musicaSelecaoInimigo = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\inimigo.mp3")
+musicaBatalha = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\luta.mp3")
+
+pygame.mixer.music.play(-1)
 while run:
     janela.blit(texturaGrama,posicaoTexturaGrama)
 
@@ -391,8 +417,10 @@ while run:
                 aux.personagem = j
                 aux.id = j.id*3
                 aux.jogador = j.sprite.jogador
-                aux.ataque = j.ataque
+                aux.ataque = j.ataque/10
                 aux.vida = j.vida
+                aux.fim = time.time()
+                aux.vidaTotal = j.vida
                 aux.rect = copy.deepcopy(j.sprite.rect)
                 aux.rect.x = ((j.sprite.rect.x/passo)-1)*passo
                 aux.rect.y = ((j.sprite.rect.y/passo)-1)*passo
@@ -456,6 +484,7 @@ while run:
             for p in player:
                 if(p.sprite.rect.collidepoint(ponto)):
                     if(len(selecaoAtaque) == 0):
+                        musicaSelecaoPlayer.play()
                         selecaoAtaque.append(p)
                     else:
                         for k in player:
@@ -465,6 +494,7 @@ while run:
             for p in playerInimigo:
                 if(p.sprite.rect.collidepoint(ponto)):
                     if(len(selecaoAtaque) == 1):
+                        musicaSelecaoInimigo.play()
                         selecaoAtaque.append(p)
                     elif(len(selecaoAtaque) > 1):
                         for k in playerInimigo:
@@ -481,8 +511,10 @@ while run:
                 aux.personagem = j
                 aux.id = selecaoAtaque[0].id*3
                 aux.jogador = selecaoAtaque[0].sprite.jogador
-                aux.ataque = selecaoAtaque[0].ataque
+                aux.ataque = selecaoAtaque[0].ataque/10
                 aux.vida = selecaoAtaque[0].vida
+                aux.fim = time.time()
+                aux.vidaTotal = selecaoAtaque[0].vida
                 aux.rect = copy.deepcopy(selecaoAtaque[0].sprite.rect)
                 aux.rect.x = ((selecaoAtaque[0].sprite.rect.x/passo)+4)*passo
                 aux.rect.y = ((selecaoAtaque[0].sprite.rect.y/passo)+3)*passo
@@ -582,11 +614,13 @@ while run:
     for k in soldado:
         k.x = k.rect.x/passo
         k.y = k.rect.x/passo
-        k.fim = time.time()
         if(len(k.movimento) > 0):
             mover(k,k.movimento)
 
         encosta(k)
+        if(k.movimento == []):
+            if(len(k.find) > 0 and k.caminhar == False):
+                k.movimento = getCaminho(k,k.find[0])
     verificaVida()
     
     todas_as_sprites.draw(janela)

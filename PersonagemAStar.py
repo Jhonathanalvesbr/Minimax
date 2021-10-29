@@ -34,6 +34,10 @@ class Personagem(pygame.sprite.Sprite):
         self.posicaoCarregar = None
         self.spriteRed = None
         self.posicaoRed = None
+        self.ataque = 0
+        self.vida = 1
+        self.vidaTotal = 1
+        self.fim = 0
         
         
         for i in range(len(self.sprites)):
@@ -41,9 +45,17 @@ class Personagem(pygame.sprite.Sprite):
             self.image = pygame.transform.rotate(self.image,200)
             
     def update(self, janela):
+        cemVida = (25 * self.vida) / self.vidaTotal
+        if(cemVida <= 0):
+            cemVida = 1
+
+
+
         self.posicaoVida = copy.deepcopy(self.rect)
         self.posicaoRed = copy.deepcopy(self.rect)
         self.posicaoCarregar = copy.deepcopy(self.rect)
+
+        self.spriteCaregarVida = pygame.transform.scale(self.spriteCaregarVida,(int(cemVida),int(5)))
         self.posicaoCarregar.x += 1
         self.posicaoRed.x += 1
         
@@ -51,34 +63,23 @@ class Personagem(pygame.sprite.Sprite):
         janela.blit(self.spriteRed,self.posicaoRed)
         janela.blit(self.spriteCaregarVida,self.posicaoCarregar)
         
-        if(self.jogador == False):
-            self.angle = -180
-            self.image = pygame.transform.flip(self.image , 1, 0)
-        if(self.id == 1 and self.caminhar == True):
-            self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
-            self.image = pygame.transform.rotate(self.image,self.angle)
-            return
-        if(self.id == -1 and self.seguir == False):
-            self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
-            self.image = pygame.transform.rotate(self.image,self.angle)
-        elif(self.id == -1 and self.find == 1):
-            self.image = self.sprites[0]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
-            self.image = pygame.transform.rotate(self.image,self.angle)
+
         
-        elif(self.id != -1):
+        if(self.id != -1):
             self.atual = self.atual + 0.005
             if self.atual >= len(self.sprites):
                 self.atual = 0
             
             self.image = self.sprites[int(self.atual)]
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
-            self.image = pygame.transform.rotate(self.image,self.angle)
-        else:
-            self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/15)*1,int(self.tamanhoTela/12)*1))
-            return
+            if(self.jogador):
+                self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/12)*1,int(self.tamanhoTela/8)*1))
+            else:
+                self.angle = -180
+                self.image = pygame.transform.flip(self.image , 1, 0)
+                self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/25)*1,int(self.tamanhoTela/25)*1))
+
+            
+
         
     def angulo(self,angle):
         self.angle = angle
