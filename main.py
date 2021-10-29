@@ -303,7 +303,13 @@ for k in caminho:
 '''
 
 def batalha():
-    if(pygame.mixer.Channel(0).get_sound() != musicaBatalha):
+    global musicaBatalha
+    e = False
+    for k in range(0,5):
+        if(pygame.mixer.Channel(k).get_sound() == musicaBatalha):
+            e = True
+            break
+    if(e == False):
         musicaBatalha.play()
     return
 
