@@ -511,7 +511,7 @@ while run:
     if(len(selecaoAtaque) >= 2):
         if(selecaoAtaque[0].velocidade == 0):
 
-                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\2.png")] 
+                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\4.png")] 
                 aux = PersonagemAStar.Personagem()
                 aux.sprite(auxSoldadoSprite)
                 aux.personagem = j
