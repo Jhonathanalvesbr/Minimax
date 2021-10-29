@@ -68,7 +68,7 @@ pygame.init()
 janela = pygame.display.set_mode((tamanhoTela,tamanhoTela))
 pygame.display.set_caption('Game IA')
 run = True
-FPS = 60
+FPS = 30
 fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
@@ -371,12 +371,12 @@ def procuraSoldado():
         e = False
         for s in soldado:
             if(k != s and k.jogador != s.jogador):
-                if(abs(k.x - s.x) <= 3 and abs(k.y - s.y) <= 3 and
-                abs(k.x - s.x) >= -3 and abs(k.y - s.y) >= -3 and k.caminhar == False):
+                if(abs(k.x - s.x) <= 2 and abs(k.y - s.y) <= 2 and
+                abs(k.x - s.x) >= -2 and abs(k.y - s.y) >= -2 and k.caminhar == False):
                     batalha()
                     e = True
                     k.caminhar = True
-                    k.movimento = getCaminhoSoldado(k,s)
+                    k.movimento = None
                     s.movimento = None
                 if(k.rect.colliderect(s.rect)):
                     global musicaHit
