@@ -54,8 +54,8 @@ def custoH(x, y, desX, desY):
     #return -1
     #return abs(min(dx,dy))
     #return g #Profundidade
-    return abs(x-desX) + abs(y-desY) #Manhattan
-    #return math.sqrt(pow((x - desX), 2.0)+pow((y - desY), 2.0)) #Euclidiana
+    #return abs(x-desX) + abs(y-desY) #Manhattan
+    return math.sqrt(pow((x - desX), 2.0)+pow((y - desY), 2.0)) #Euclidiana
     #return 0
 
 def criaEstado(self, iniX, iniY):

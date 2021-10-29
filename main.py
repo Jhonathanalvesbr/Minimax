@@ -377,6 +377,7 @@ def procuraSoldado():
                     e = True
                     k.caminhar = True
                     k.movimento = getCaminhoSoldado(k,s)
+                    s.movimento = None
                 if(k.rect.colliderect(s.rect)):
                     global musicaHit
                     e = True
