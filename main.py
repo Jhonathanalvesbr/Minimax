@@ -417,7 +417,7 @@ while run:
         for j in playerInimigo:
             if(j.velocidade <= 0):
                 j.velocidade  = j.level*velocidade
-                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")] 
+                auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\3.png")] 
                 aux = PersonagemAStar.Personagem()
                 aux.sprite(auxSoldadoSprite)
                 aux.personagem = j

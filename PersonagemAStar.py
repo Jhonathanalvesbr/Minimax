@@ -76,7 +76,7 @@ class Personagem(pygame.sprite.Sprite):
             else:
                 self.angle = -180
                 self.image = pygame.transform.flip(self.image , 1, 0)
-                self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/25)*1,int(self.tamanhoTela/25)*1))
+                self.image = pygame.transform.scale(self.image,(int(self.tamanhoTela/12)*1,int(self.tamanhoTela/8)*1))
 
             
 
