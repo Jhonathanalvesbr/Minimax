@@ -36,7 +36,7 @@ def criarPersonagens():
     return personagem
 
 automatico = False
-
+casteloDestruido = []
 sprite = criarPersonagens()
 random.shuffle(sprite)
 player = criaPlayer(sprite,0,3)
@@ -70,7 +70,7 @@ pygame.init()
 janela = pygame.display.set_mode((tamanhoTela,tamanhoTela))
 pygame.display.set_caption('Game IA')
 run = True
-FPS = 30
+FPS = 60
 fpsClock = pygame.time.Clock()
 timeClick = 0
 selecaoAtaque = []
@@ -371,12 +371,34 @@ def imprimirCaminho():
 def verificaVida():
     global player
     global playerInimigo
-    
+    global casteloDestruido
+
     for k in player:
         if(k.vida <= 0):
+
+            img = pygame.image.load(os.getcwd()+"\\pacote\\casteloDestruido\\castelo.png")
+            aux = Personagem()
+            j = k
+            
+            aux.updateSprite([img], "destruido")
+            aux.sprite.rect = k.sprite.rect
+            aux.velocidade = 0
+            aux.vida = 0
+            casteloDestruido.append(aux)
+            todas_as_sprites.add(aux.sprite)
             deletar(k)
     for k in playerInimigo:
         if(k.vida <= 0):
+            img = pygame.image.load(os.getcwd()+"\\pacote\\casteloDestruido\\castelo.png")
+            aux = Personagem()
+            j = k
+            
+            aux.updateSprite([img], "destruido")
+            aux.sprite.rect = k.sprite.rect
+            aux.velocidade = 0
+            aux.vida = 0
+            casteloDestruido.append(aux)
+            todas_as_sprites.add(aux.sprite)
             deletar(k)
     for k in soldado:
         if(k.vida <= 0):
