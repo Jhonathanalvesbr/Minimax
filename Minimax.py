@@ -27,9 +27,9 @@ a = 0
 def minimax(no, jogada, alpha, beta): 
     global a
     a+= 1
-    if(jogada == True and no.altura == 4):
+    if(jogada == True and no.altura == 5):
         return heuristica(no.playerInimigo)
-    elif(jogada == False and no.altura == 4):
+    elif(jogada == False and no.altura == 5):
         return -heuristica(no.player)
     
     if len(no.player) == 0:
@@ -74,7 +74,7 @@ def minimax(no, jogada, alpha, beta):
 playerInimigo[1].ataque = 3
 player[1].ataque = 3
 
-no = No(None, player, playerInimigo, 0)
+no = No(None, playerInimigo, player, 0)
 minimax(no, True, -math.inf, math.inf)
         
 x = 0

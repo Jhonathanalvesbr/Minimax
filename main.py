@@ -35,6 +35,8 @@ def criarPersonagens():
         personagem.append(personagemDisponiveis(k,caminhoPersonagens+"\\"+k))
     return personagem
 
+automatico = True
+
 sprite = criarPersonagens()
 random.shuffle(sprite)
 player = criaPlayer(sprite,0,3)
@@ -74,6 +76,72 @@ timeClick = 0
 selecaoAtaque = []
 
 soldado = []
+
+
+#d = player[0]
+#deletar(d)
+#d = player[0]
+#deletar(d)
+player[1].ataque = 3
+#player[2].vida = 10
+playerInimigo[2].vida = 2
+playerInimigo[1].ataque = 3
+
+y = 10
+x = 0
+for k in player:
+    k.id = y
+    y += 1
+    k.sprite.vidaTotal = k.vida
+    k.sprite.velocidadeTotal = k.level*(velocidade/2)
+    k.velocidade = x
+    x += 1
+x = 0
+y = -10
+for k in playerInimigo:
+    k.id = y
+    y -= 1
+    k.sprite.vidaTotal = k.vida
+    k.sprite.velocidadeTotal = k.level*velocidade
+    k.velocidade = x
+    x += 1
+
+texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama4.jpg")
+texturaGrama = pygame.transform.scale(texturaGrama,(int(600),int(600)))
+posicaoTexturaGrama = texturaGrama.get_rect(midleft=(0, +300))
+timeVelocidade = time.time()
+passo = 25
+tamanho = int(600/passo)
+busca = AStar.Astar(tamanho)
+caminho = []
+for y in range(tamanho):
+    linha = []
+    for x in range(tamanho):
+        linha.append(0)
+    caminho.append(linha)
+    
+#deletar(playerInimigo[1])
+#deletar(playerInimigo[1])
+timeRun = 0
+
+musicaTema = pygame.mixer.music.load(os.getcwd()+"\\pacote\\mp3\\tema.mp3")
+musicaSelecaoPlayer = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\player.mp3")
+musicaSelecaoInimigo = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\inimigo.mp3")
+musicaBatalha = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\luta.mp3")
+musicaExplosao = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\explosao.mp3")
+musicaAplausos = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\aplausos.mp3")
+musicaHit = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\hit.mp3")
+musicaHit.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
+
+#soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
+#soldado = PersonagemAStar.Personagem()
+#soldado.sprite(soldadoSprite)
+#soldado.personagem = player[0]
+#soldado.id = 30
+#todas_as_sprites.add(soldado)
+
 
 def mover(personagem, movimento):
     if(personagem.fim-personagem.ini  > personagem.velocidade and movimento != None and len(movimento) > 0 ):
@@ -174,16 +242,16 @@ def getCaminhoSoldado(personagem,pernosagemAlvo):
 
     xy = [int(pernosagemAlvo.rect.x/passo),int(pernosagemAlvo.rect.y/passo)]
     
-    caminho[xy[0]][xy[1]] = pernosagemAlvo.id
-    personagem.desX = xy[0]
-    personagem.desY = xy[1]
+    caminho[xy[1]][xy[0]] = pernosagemAlvo.id
+    personagem.desX = xy[1]
+    personagem.desY = xy[0]
 
     #imprimirCaminho()
 
     movimento = busca.busca(caminho,[y,x],pernosagemAlvo.id,x,y,personagem)
 
     #print(movimento)
-    caminho[xy[0]][xy[1]] = 0
+    caminho[xy[1]][xy[0]] = 0
     caminho[y][x] = 0
     return movimento
 
@@ -206,9 +274,8 @@ def minimax(player, playerInimigo):
         i.append(aux)
     no = No(None, p, i, 0)
     Minimax.minimax(no, True, -math.inf, math.inf)
-    '''for k in no.filho:
-        print(k.valor)
-    '''
+
+
     return no
 
 def deletar(d):
@@ -242,55 +309,6 @@ def deletar(d):
                     todas_as_sprites.remove(i)
                     playerInimigo.remove(k)
                     return
-
-#d = player[0]
-#deletar(d)
-#d = player[0]
-#deletar(d)
-player[1].ataque = 3
-player[0].vida = 10
-playerInimigo[0].vida = 10
-playerInimigo[1].ataque = 3
-
-y = 10
-x = 0
-for k in player:
-    k.id = y
-    y += 1
-    k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = k.level*(velocidade/2)
-    k.velocidade = x
-    x += 1
-x = 0
-y = -10
-for k in playerInimigo:
-    k.id = y
-    y -= 1
-    k.sprite.vidaTotal = k.vida
-    k.sprite.velocidadeTotal = k.level*velocidade
-    k.velocidade = x
-    x += 1
-
-texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama4.jpg")
-texturaGrama = pygame.transform.scale(texturaGrama,(int(600),int(600)))
-posicaoTexturaGrama = texturaGrama.get_rect(midleft=(0, +300))
-timeVelocidade = time.time()
-passo = 25
-tamanho = int(600/passo)
-busca = AStar.Astar(tamanho)
-caminho = []
-for y in range(tamanho):
-    linha = []
-    for x in range(tamanho):
-        linha.append(0)
-    caminho.append(linha)
-
-#soldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\1.png")]
-#soldado = PersonagemAStar.Personagem()
-#soldado.sprite(soldadoSprite)
-#soldado.personagem = player[0]
-#soldado.id = 30
-#todas_as_sprites.add(soldado)
 '''
 for k in caminho:
     for i in player:
@@ -342,7 +360,6 @@ def encosta(personagem):
             k.vida -= personagem.ataque
             return None
 
-
 def imprimirCaminho():
     global caminho
     for x in range(len(caminho)):
@@ -371,47 +388,36 @@ def procuraSoldado():
         e = False
         for s in soldado:
             if(k != s and k.jogador != s.jogador):
-                if(abs(k.x - s.x) <= 2 and abs(k.y - s.y) <= 2 and
-                abs(k.x - s.x) >= -2 and abs(k.y - s.y) >= -2 and k.caminhar == False):
+                if(abs(k.x - s.x) + abs(k.y - s.y) <= 3 and k.caminhar == False):
                     batalha()
                     e = True
+                    if(s.jogador == False):
+                        s.movimento = None
                     k.caminhar = True
-                    k.movimento = None
-                    s.movimento = None
+                    k.movimento = getCaminhoSoldado(k,s)
+                    
                 if(k.rect.colliderect(s.rect)):
+                    s.movimento = None
                     global musicaHit
                     e = True
-                    r = random.randrange(0,15)
+                    r = random.randrange(0,25)
                     if(r == 5):
                         musicaHit.play()
                     k.caminhar = True
                     k.vida -= s.ataque
                     s.vida -= k.ataque
-                if(k.rect.colliderect(s.rect) and abs(k.x - s.x) <= 1 and abs(k.y - s.y) <= 1 and
-                abs(k.x - s.x) >= -1 and abs(k.y - s.y) >= -1):
-                    k.movimento = None
+                if(k.rect.colliderect(s.rect) and abs(k.x - s.x) + abs(k.y - s.y) <= 1):
+                    s.movimento = None
+                    r = random.randrange(0,25)
+                    if(r == 5):
+                        musicaHit.play()
                     e = True
+                    k.movimento = None
 
      
-        if(e == False and k.movimento == None):
+        if((e == False and k.movimento == None) and (len(playerInimigo) > 0 and len(player))):
             k.movimento = getCaminho(k,k.find[0])
             k.caminhar = False
-
-                   
-
-#deletar(playerInimigo[1])
-#deletar(playerInimigo[1])
-timeRun = 0
-
-musicaTema = pygame.mixer.music.load(os.getcwd()+"\\pacote\\mp3\\tema.mp3")
-musicaSelecaoPlayer = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\player.mp3")
-musicaSelecaoInimigo = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\inimigo.mp3")
-musicaBatalha = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\luta.mp3")
-musicaExplosao = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\explosao.mp3")
-musicaAplausos = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\aplausos.mp3")
-musicaHit = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\hit.mp3")
-musicaHit.set_volume(0.5)
-pygame.mixer.music.play(-1)
 
 def procuraNovoCastelo(soldado):
     global player
@@ -502,23 +508,31 @@ while run:
                 aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
                 soldado.append(aux)
                 j.personagemAStar.append(aux)
-                no = minimax(player, playerInimigo)
+
+                i = []
+                for k in playerInimigo:
+                        auxP = Personagem()
+                        auxP.ataque = k.ataque
+                        auxP.vida = k.vida
+                        auxP.nome = k.nome
+                        i.append(auxP)
+                p = []
+                for k in player:
+                        auxP = Personagem()
+                        auxP.ataque = k.ataque
+                        auxP.vida = k.vida
+                        auxP.nome = k.nome
+                        p.append(auxP)
+                            
+                no = No(None,p,i,0)
+                Minimax.minimax(no, True, -math.inf, math.inf)
+                
                 joagada = None
                 valor = -math.inf
                 for k in no.filho:
                     if(valor < k.valor):
                         valor = k.valor
                         jogada = k
-                '''
-                nome = jogada.id[1].nome
-                mov = []
-                for k in player:
-                    if(k.nome == nome):
-                        aux.find.append(k.id)
-                        mov = getCaminho(aux,aux.find[0])
-                        exit()
-                        break
-                '''
                 nome = jogada.id[1].nome
                 mov = []
                 for k in player:
@@ -526,7 +540,6 @@ while run:
                         aux.find.append(k)
                         mov = getCaminho(aux,k)
                         break
-                
                 aux.ini = time.time()
                 aux.movimento = mov
                 todas_as_sprites.add(aux)
@@ -535,6 +548,81 @@ while run:
         for j in player:
             if(j.velocidade > 0):
                 j.velocidade -= 1
+                
+        if(automatico):
+            for j in player:
+                if(j.velocidade <= 0):
+                    auxSoldadoSprite = [pygame.image.load(os.getcwd()+"\\pacote\\soldado\\4.png")] 
+                    aux = PersonagemAStar.Personagem()
+                    aux.sprite(auxSoldadoSprite)
+                    aux.personagem = j
+                    aux.id = j.id*3
+                    aux.jogador = j.sprite.jogador
+                    aux.ataque = j.ataque/10
+                    aux.vida = j.vida
+                    aux.fim = time.time()
+                    aux.vidaTotal = j.vida
+                    aux.rect = copy.deepcopy(j.sprite.rect)
+                    aux.rect.x = ((j.sprite.rect.x/passo)+4)*passo
+                    aux.rect.y = ((j.sprite.rect.y/passo)+3)*passo
+
+                    aux.spriteVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Background.png")
+                    aux.spriteVida = pygame.transform.scale(aux.spriteVida,(int(80),int(20)))
+                    aux.posicaoVida = aux.spriteVida.get_rect(midleft=(80, 20))
+
+                    aux.spriteCaregarVida = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Loading Bar Green.png")
+                    aux.spriteCaregarVida = pygame.transform.scale(aux.spriteCaregarVida,(int(78),int(20)))
+                    aux.posicaoCarregar = aux.spriteCaregarVida.get_rect(midleft=(80, 20))
+
+                    aux.spriteRed = pygame.image.load(os.getcwd()+"\\pacote\\barra\\Barra_Vermelho.png")
+                    aux.spriteRed = pygame.transform.scale(aux.spriteRed,(int(78),int(20)))
+                    aux.posicaoRed = aux.spriteRed.get_rect(midleft=(80, 20))
+                    aux.spriteVida = pygame.transform.smoothscale( aux.spriteVida, (int(25), int(5)) )
+                    aux.spriteRed = pygame.transform.smoothscale( aux.spriteRed, (int(25), int(5)) )
+                    aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
+                    soldado.append(aux)
+
+                    
+                    i = []
+                    for k in playerInimigo:
+                        auxP = Personagem()
+                        auxP.ataque = k.ataque
+                        auxP.vida = k.vida
+                        auxP.nome = k.nome
+                        i.append(auxP)
+                    p = []
+                    for k in player:
+                        auxP = Personagem()
+                        auxP.ataque = k.ataque
+                        auxP.vida = k.vida
+                        auxP.nome = k.nome
+                        p.append(auxP)
+                                
+                    no = No(None,i,p,0)
+                    Minimax.minimax(no, True, -math.inf, math.inf)
+
+                
+                    joagada = None
+                    valor = -math.inf
+                    for k in no.filho:
+                        if(valor < k.valor):
+                            valor = k.valor
+                            jogada = k
+                    nome = jogada.id[1].nome
+                    mov = []
+                    for k in playerInimigo:
+                        if(k.nome == nome):
+                            aux.find.append(k)
+                            mov = getCaminho(aux,k)
+                            break
+                    
+                    j.velocidade = j.level*(velocidade/2)
+                    
+                    aux.ini = time.time()
+                    aux.movimento = mov
+                    
+                    todas_as_sprites.add(aux)
+                    
         timeVelocidade = time.time()
     
         
@@ -596,15 +684,7 @@ while run:
                 aux.spriteCaregarVida = pygame.transform.smoothscale( aux.spriteCaregarVida, (int(25), int(5)))
                 soldado.append(aux)
                 selecaoAtaque[0].personagemAStar.append(aux)
-                '''
-                nome = selecaoAtaque[1].nome
-                mov = []
-                for k in playerInimigo:
-                    if(k.nome == nome):
-                        aux.find.append(k.id)
-                        mov = getCaminho(aux,aux.find[0])
-                        break
-                '''
+
                 nome = selecaoAtaque[1].nome
                 mov = []
                 for k in playerInimigo:
