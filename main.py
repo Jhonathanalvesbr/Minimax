@@ -76,7 +76,7 @@ selecaoAtaque = []
 soldado = []
 
 def mover(personagem, movimento):
-    if(personagem.fim-personagem.ini  > personagem.velocidade and len(movimento) > 0):
+    if(personagem.fim-personagem.ini  > personagem.velocidade and movimento != None and len(movimento) > 0 ):
         if(personagem.jogador != -1):
             if(personagem.rect.x < movimento[0][0]*passo):
                 personagem.angle = 0
@@ -215,7 +215,8 @@ def deletar(d):
     global player
     global playerInimigo
     global soldado
-    
+    global musicaExplosao
+    global musicaAplausos
     for k in soldado:
         if(k == d):
             for i in todas_as_sprites:
@@ -227,6 +228,8 @@ def deletar(d):
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
+                    musicaExplosao.play()
+                    musicaAplausos.play()
                     todas_as_sprites.remove(i)
                     player.remove(k)
                     return
@@ -234,6 +237,8 @@ def deletar(d):
         if(k == d):
             for i in todas_as_sprites:
                 if(i == k.sprite):
+                    musicaExplosao.play()
+                    musicaAplausos.play()
                     todas_as_sprites.remove(i)
                     playerInimigo.remove(k)
                     return
@@ -319,7 +324,7 @@ def encosta(personagem):
     global timeRun
 
     if(timeRun-personagem.fim < 1):
-        return
+        return None
     else:
         personagem.fim = time.time()
 
@@ -330,12 +335,12 @@ def encosta(personagem):
         if(k.sprite.rect.collidepoint(p)):
             k.vida -= personagem.ataque
             batalha()
-            return
+            return None
     for k in playerInimigo:
         if(k.sprite.rect.collidepoint(p)):
             batalha()
             k.vida -= personagem.ataque
-            return
+            return None
 
 
 def imprimirCaminho():
@@ -361,20 +366,36 @@ def verificaVida():
 
 def procuraSoldado():
     global soldado
+    
     for k in soldado:
+        e = False
         for s in soldado:
             if(k != s and k.jogador != s.jogador):
-                if(abs(k.x) - abs(s.x) <= 3 and abs(k.y) - abs(s.y) <= 3 and
-                abs(k.x) - abs(s.x) >= -3 and abs(k.y) - abs(s.y) >= -3 and k.caminhar == False):
+                if(abs(k.x - s.x) <= 3 and abs(k.y - s.y) <= 3 and
+                abs(k.x - s.x) >= -3 and abs(k.y - s.y) >= -3 and k.caminhar == False):
                     batalha()
+                    e = True
                     k.caminhar = True
                     k.movimento = getCaminhoSoldado(k,s)
                 if(k.rect.colliderect(s.rect)):
+                    global musicaHit
+                    e = True
+                    r = random.randrange(0,15)
+                    if(r == 5):
+                        musicaHit.play()
                     k.caminhar = True
                     k.vida -= s.ataque
                     s.vida -= k.ataque
-                else:
-                    k.caminhar = False
+                if(k.rect.colliderect(s.rect) and abs(k.x - s.x) <= 1 and abs(k.y - s.y) <= 1 and
+                abs(k.x - s.x) >= -1 and abs(k.y - s.y) >= -1):
+                    k.movimento = None
+                    e = True
+
+     
+        if(e == False and k.movimento == None):
+            k.movimento = getCaminho(k,k.find[0])
+            k.caminhar = False
+
                    
 
 #deletar(playerInimigo[1])
@@ -385,8 +406,41 @@ musicaTema = pygame.mixer.music.load(os.getcwd()+"\\pacote\\mp3\\tema.mp3")
 musicaSelecaoPlayer = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\player.mp3")
 musicaSelecaoInimigo = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\inimigo.mp3")
 musicaBatalha = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\luta.mp3")
-
+musicaExplosao = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\explosao.mp3")
+musicaAplausos = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\aplausos.mp3")
+musicaHit = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\hit.mp3")
+musicaHit.set_volume(0.5)
 pygame.mixer.music.play(-1)
+
+def procuraNovoCastelo(soldado):
+    global player
+    global playerInimigo
+    e = False
+    if(soldado.jogador == True):
+        for k in playerInimigo:
+            if(soldado.find[0] == k):
+                e = True
+    elif(soldado.jogador == False):
+        for k in player:
+            if(soldado.find[0] == k):
+                e = True
+    if(e == True):
+        return getCaminho(soldado,soldado.find[0])
+
+    if(e == False and soldado.jogador == True):
+        if(len(playerInimigo) == 0):
+            return
+        r = random.randint(0,len(playerInimigo)-1)
+        soldado.find[0] = playerInimigo[r]
+    if(e == False and soldado.jogador == False):
+        if(len(player) == 0):
+            return
+        r = random.randint(0,len(player)-1)
+        soldado.find[0] = player[r]
+    
+    return getCaminho(soldado,soldado.find[0])
+
+
 while run:
     janela.blit(texturaGrama,posicaoTexturaGrama)
 
@@ -485,7 +539,7 @@ while run:
         
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
-        if(timeRun-timeClick > 0.5):
+        if(timeRun-timeClick > 0.1):
             #print(str(ponto[0]/passo) + " : " + str(ponto[1]/passo))
             for p in player:
                 if(p.sprite.rect.collidepoint(ponto)):
@@ -620,13 +674,13 @@ while run:
     for k in soldado:
         k.x = k.rect.x/passo
         k.y = k.rect.x/passo
-        if(len(k.movimento) > 0):
+        if((k.movimento) != []):
             mover(k,k.movimento)
 
         encosta(k)
         if(k.movimento == []):
-            if(len(k.find) > 0 and k.caminhar == False):
-                k.movimento = getCaminho(k,k.find[0])
+            k.movimento = procuraNovoCastelo(k)
+
     verificaVida()
     
     todas_as_sprites.draw(janela)
