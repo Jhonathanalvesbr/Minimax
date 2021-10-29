@@ -35,7 +35,7 @@ def criarPersonagens():
         personagem.append(personagemDisponiveis(k,caminhoPersonagens+"\\"+k))
     return personagem
 
-automatico = True
+automatico = fALSE
 
 sprite = criarPersonagens()
 random.shuffle(sprite)
