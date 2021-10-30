@@ -91,6 +91,8 @@ def criaEstado(self, iniX, iniY):
     elif(iniX-1 >= 0 and iniY+1 >= 0 and iniX-1 < self.tamanho and iniY+1 < self.tamanho and self.caminho[iniX-1][iniY+1] == 0):
         # print("45")
         return Estado.Estado(iniX-1, iniY+1)
+    else:
+        return -1
 
     
 
@@ -221,7 +223,6 @@ class Astar():
         caminho = c[:]
         iniX = posicaoPersonagemXY[0]
         iniY = posicaoPersonagemXY[1]
-        
         
         listaAberta = []
         listaFechada = []
