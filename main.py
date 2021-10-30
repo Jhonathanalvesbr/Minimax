@@ -10,8 +10,8 @@ import math
 import AStar
 import PersonagemAStar
 import copy
-import pygame.mixer 
-
+import pygame.mixer
+import Obstaculo
 
 class personagemDisponiveis():
     def __init__(aux, nome, caminho):
@@ -124,7 +124,8 @@ for y in range(tamanho):
 #deletar(playerInimigo[1])
 #deletar(playerInimigo[1])
 timeRun = 0
-
+obs = pygame.image.load(os.getcwd()+"\\pacote\\obstaculo\\obs.png")
+obstaculo = [] 
 musicaTema = pygame.mixer.music.load(os.getcwd()+"\\pacote\\mp3\\tema.mp3")
 musicaSelecaoPlayer = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\player.mp3")
 musicaSelecaoInimigo = pygame.mixer.Sound(os.getcwd()+"\\pacote\\mp3\\inimigo.mp3")
@@ -648,6 +649,38 @@ while run:
                     
         timeVelocidade = time.time()
     
+    if(pygame.mouse.get_pressed()[2] == True):
+        if(timeRun-timeClick > 0.1):
+            pos = pygame.mouse.get_pos()
+            pos = pygame.mouse.get_pos()
+            xTemp = int(pos[1]/passo)
+            yTemp = int(pos[0]/passo)
+            p = []
+            p.append(yTemp*passo)
+            p.append(xTemp*passo)
+            if(caminho[xTemp][yTemp] == 0):
+                caminho[xTemp][yTemp] = -1
+                print("caminho["+str(xTemp)+"]["+str(yTemp)+"] = -1")
+                i = Obstaculo.Personagem()
+                i.sprite([obs])
+                obstaculo.append(i)
+                obstaculo[len(obstaculo)-1].x = xTemp
+                obstaculo[len(obstaculo)-1].y = yTemp
+                obstaculo[len(obstaculo)-1].rect.y = xTemp*passo
+                obstaculo[len(obstaculo)-1].rect.x = yTemp*passo
+                obstaculo[len(obstaculo)-1].id = -1
+                todas_as_sprites.add(obstaculo[len(obstaculo)-1])
+            else:
+                i = 0
+                while i < len(obstaculo):
+                    if(obstaculo[i].rect.collidepoint(p)):
+                        if(isinstance(obstaculo[i], Obstaculo.Personagem)):
+                            caminho[xTemp][yTemp] = 0
+                            todas_as_sprites.remove(obstaculo[i])
+                            obstaculo.pop(i)
+                            break
+                    i += 1
+            timeClick = time.time()
         
     if(pygame.mouse.get_pressed()[0] == True):
         ponto = pygame.mouse.get_pos()
@@ -673,6 +706,7 @@ while run:
                             if(k == selecaoAtaque[1]):
                                 selecaoAtaque[1] = p
                                 break
+            timeClick = time.time()
 
     if(len(selecaoAtaque) >= 2):
         if(selecaoAtaque[0].velocidade == 0):
