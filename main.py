@@ -104,7 +104,7 @@ for k in playerInimigo:
     y -= 1
     k.sprite.vidaTotal = k.vida
     k.sprite.velocidadeTotal = k.level*velocidade
-    k.velocidade = x
+    k.velocidade = 20-x
     x += 1
 
 texturaGrama = pygame.image.load(os.getcwd()+"\\pacote\\textura\\grama4.jpg")
@@ -472,7 +472,37 @@ def procuraNovoCastelo(soldado):
     return getCaminho(soldado,soldado.find[0])
 
 
+
+
+
+
+
+
 while run:
+    for x in range(len(caminho)):
+        for y in range(len(caminho)):
+            if(caminho[x][y] == -1):
+                e = -1
+                for f in obstaculo:
+                    if(f.x == x and f.y == y):
+                        e = 1
+                        break
+                if(e == -1):
+                    i = Obstaculo.Personagem()
+                    i.sprite([obs])
+                    obstaculo.append(i)
+                    obstaculo[len(obstaculo)-1].x = x
+                    obstaculo[len(obstaculo)-1].tamanho = 5
+                    obstaculo[len(obstaculo)-1].caminhar = True
+                    obstaculo[len(obstaculo)-1].y = y
+                    obstaculo[len(obstaculo)-1].velocidade = 1
+                    obstaculo[len(obstaculo)-1].rect.y = x*passo
+                    obstaculo[len(obstaculo)-1].rect.x = y*passo
+                    obstaculo[len(obstaculo)-1].id = -1
+                    todas_as_sprites.add(obstaculo[len(obstaculo)-1])
+
+
+
     janela.blit(texturaGrama,posicaoTexturaGrama)
 
     for event in pygame.event.get():
@@ -650,7 +680,7 @@ while run:
         timeVelocidade = time.time()
     
     if(pygame.mouse.get_pressed()[2] == True):
-        if(timeRun-timeClick > 0.1):
+        if(timeRun-timeClick > 0.5):
             pos = pygame.mouse.get_pos()
             pos = pygame.mouse.get_pos()
             xTemp = int(pos[1]/passo)
